@@ -11,7 +11,7 @@
 ## 2. Problem description
 
 Kazakhstan's public procurement system (goszakup.gov.kz) processes roughly **1.8 million procurements per year**
-(12.9 million in total as of September 2026), spending a significant share of the state budget. Every procurement,
+(12.9 million in total as of September 2026, with over 40 million supplier bids), spending a significant share of the state budget. Every procurement,
 lot, bid and contract is published through the open **OWS v3 GraphQL API**. Oversight bodies, journalists and
 auditors, however, work by hand: they can inspect a few hundred procurements a year, while the signs of a
 problematic procurement — a single bidder, an implausible price discount, a competitive procedure that "fails" and is
@@ -66,8 +66,8 @@ rather than accuracy.
 
 - **Source:** OWS v3 GraphQL API, `https://ows.goszakup.gov.kz/v3/graphql` — the official open-data interface of the
   public procurement portal. Access via a personal API token (valid until 13 Nov 2026). Data is public.
-- **Scope:** all procurements with `publishDate` in **2024-01-01 … 2024-03-31** (≈ 450 000 procurements, ~1/4 of the
-  1 818 344 FY2024 procurements) and every linked record. Q1 2024 is old enough that every contract has had > 2 years
+- **Scope:** all procurements with `publishDate` in **2024-01-01 … 2024-03-31** — **630 762 procurements**, about 35 %
+  of the 1 818 344 FY2024 procurements — and every linked record. Q1 2024 is old enough that every contract has had > 2 years
   to reach a final status, so the outcome label is settled.
 - **Collection:** `src/collect.py` — resumable pagination (`limit/after`), stored as JSONL and Parquet. The snapshot
   is published as a GitHub release asset; the script reproduces it from scratch.
@@ -76,13 +76,15 @@ rather than accuracy.
 
 | Table | Grain | Approx. rows (Q1 2024) | Key fields |
 |---|---|---|---|
-| `trd_buy` | one procurement | ~450 000 | id, nameRu, trade method, status, totalSum, countLots, customer BIN, winner BIN, publish/start/end dates |
-| `lots` | one lot | ~600 000 | trdBuyId, nameRu/nameKz, descriptionRu, amount, dumping flag, KTRU code (`enstruList`), status |
-| `trd_app` | one bid | ~700 000 | buyId, supplier BIN, per-lot price / discount |
-| `contracts` | one contract | ~450 000 | trdBuyId, supplier BIN, status, cancellation reason, sums, plan/actual execution dates |
+| `trd_buy` | one procurement | 630 762 | id, nameRu, trade method, status, totalSum, countLots, customer BIN, winner BIN, publish/start/end dates |
+| `lots` | one lot | ~1 000 000 | trdBuyId, nameRu/nameKz, descriptionRu, amount, dumping flag, KTRU code (`enstruList`), status |
+| `trd_app` | one bid | ~2 500 000 | buyId, supplier BIN, per-lot price / discount |
+| `contracts` | one contract | ~470 000 | trdBuyId, supplier BIN, status, cancellation reason, sums, plan/actual execution dates |
 | `rnu` | one supplier entry | 17 638 (all-time) | supplier BIN, start/end dates in the register |
 
-Row counts are estimates from FY2024 totals reported by the API; exact counts will be given in A2.
+The `trd_buy` count is exact (API `totalCount`); the others are extrapolated from a pilot sample of 150
+  procurements (1.6 lots and 0.75 contracts per procurement) and from the bid/procurement ratio; exact counts will be
+  given in A2.
 
 ### 6.3 Target variable
 

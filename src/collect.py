@@ -5,7 +5,11 @@ Stages (each resumable via data/raw/_checkpoint.json):
   1. trd_buy   — procurements with publishDate in [date_from, date_to]
   2. lots      — lots of those procurements       (filter trdBuyId, chunks of 150)
   3. contracts — contracts of those procurements  (filter trdBuyId, chunks of 150)
-  4. trd_app   — applications (bids)              (filter buyId,    chunks of 200)
+  4. trd_app   — applications (bids). OWS' buyId filter takes a single id and the
+                 dateApply filter is broken server-side, so we binary-search the id
+                 range covering [date_from - 7d, date_to + 60d] (ids are chronological)
+                 and walk it with the unfiltered `after` cursor; rows are then restricted
+                 to buyId in trd_buy at parquet time.
   5. rnu       — full register of unreliable suppliers
 
 Usage:
@@ -19,6 +23,7 @@ import argparse
 import json
 import logging
 import sys
+import time
 from pathlib import Path
 
 import pandas as pd
@@ -70,8 +75,8 @@ def stage_trd_buy(c: OWSClient, ck: dict, date_from: str, date_to: str) -> None:
     st = ck.setdefault("trd_buy", {"after": 0, "rows": 0, "done": False})
     if st["done"]:
         log.info("trd_buy: already done (%d rows)", st["rows"]); return
-    # OWS Elasticsearch filters want microsecond precision timestamps
-    flt = {"publishDate": [f"{date_from} 00:00:00.000000", f"{date_to} 23:59:59.999999"]}
+    # plain YYYY-MM-DD bounds; the microsecond format used by the old ETL now returns a server error
+    flt = {"publishDate": [date_from, date_to]}
     total = c.total_count(GQL_TRD_BUY, {"filter": flt})
     log.info("trd_buy: totalCount=%s for %s..%s, resuming after id=%s", total, date_from, date_to, st["after"])
     bar = tqdm(total=total, initial=st["rows"], unit="rows", desc="trd_buy")
@@ -118,6 +123,61 @@ def stage_rnu(c: OWSClient, ck: dict) -> None:
     st["done"] = True; save_ckpt(ck)
 
 
+_TRD_APP_PROBE = "query($limit:Int!,$after:Int){ TrdApp(limit:$limit,after:$after){ id dateApply } }"
+
+
+def find_trd_app_id_bound(c: OWSClient, target_date: str, lo: int = 1, hi: int | None = None) -> int:
+    """
+    Smallest TrdApp id whose dateApply >= target_date ("YYYY-MM-DD ...").
+    Uses the fact that `after=x` returns the newest record with id < x and that ids are
+    chronological. ~26 requests for the full id space.
+    """
+    if hi is None:
+        newest = c.graphql(_TRD_APP_PROBE, {"limit": 1})["data"]["TrdApp"][0]
+        hi = newest["id"] + 1
+    while hi - lo > 1:
+        mid = (lo + hi) // 2
+        rows = c.graphql(_TRD_APP_PROBE, {"limit": 1, "after": mid})["data"]["TrdApp"]
+        if not rows:                        # nothing below mid -> boundary is above
+            lo = mid
+            continue
+        rec = rows[0]                        # newest record with id < mid
+        if (rec["dateApply"] or "") >= target_date:
+            hi = rec["id"]                   # boundary is at or below rec
+        else:
+            lo = mid                         # everything below mid is older
+        time.sleep(c.delay)
+    return hi
+
+
+def stage_trd_app(c: OWSClient, ck: dict, date_from: str, date_to: str) -> None:
+    """Walk the TrdApp id range that covers the period, newest -> oldest, with the unfiltered cursor."""
+    from datetime import date, timedelta
+    out = RAW / "trd_app.jsonl"
+    st = ck.setdefault("trd_app", {"id_lo": None, "id_hi": None, "after": None, "rows": 0, "done": False})
+    if st["done"]:
+        log.info("trd_app: already done (%d rows)", st["rows"]); return
+    if st["id_lo"] is None:
+        d_lo = (date.fromisoformat(date_from) - timedelta(days=7)).isoformat()
+        d_hi = (date.fromisoformat(date_to) + timedelta(days=60)).isoformat()   # late bids for March procurements
+        st["id_lo"] = find_trd_app_id_bound(c, d_lo)
+        st["id_hi"] = find_trd_app_id_bound(c, d_hi)
+        st["after"] = st["id_hi"]
+        save_ckpt(ck)
+    log.info("trd_app: id range [%d, %d) (~%d ids), resuming after id=%d",
+             st["id_lo"], st["id_hi"], st["id_hi"] - st["id_lo"], st["after"])
+    bar = tqdm(total=st["id_hi"] - st["id_lo"], initial=st["id_hi"] - st["after"], unit="ids", desc="trd_app")
+    for batch, last_id in c.paginate(GQL_TRD_APP, "TrdApp", after=st["after"]):
+        keep = [r for r in batch if r["id"] >= st["id_lo"]]
+        append_jsonl(out, keep)
+        bar.update(st["after"] - max(last_id, st["id_lo"]))
+        st["after"] = last_id; st["rows"] += len(keep); save_ckpt(ck)
+        if last_id < st["id_lo"]:
+            break
+    bar.close()
+    st["done"] = True; save_ckpt(ck)
+
+
 # ── jsonl -> parquet ─────────────────────────────────────────────────────────
 
 def flatten(row: dict) -> dict:
@@ -143,6 +203,10 @@ def to_parquet() -> None:
         df = pd.DataFrame(rows)
         if "id" in df:
             df = df.drop_duplicates("id")
+        if name == "trd_app" and (RAW / "trd_buy.parquet").exists():
+            buy_ids = set(pd.read_parquet(RAW / "trd_buy.parquet", columns=["id"])["id"])
+            before = len(df); df = df[df["buyId"].isin(buy_ids)]
+            log.info("trd_app: kept %d of %d rows with buyId in trd_buy", len(df), before)
         dst = RAW / f"{name}.parquet"
         df.to_parquet(dst, index=False)
         log.info("%s: %d rows x %d cols -> %s (%.1f MB)", name, len(df), df.shape[1], dst.name, dst.stat().st_size / 1e6)
@@ -176,7 +240,7 @@ def main(argv=None):
         elif s == "contracts":
             stage_by_parent(c, ck, "contracts", GQL_CONTRACT, "Contract", "trdBuyId", 150)
         elif s == "trd_app":
-            stage_by_parent(c, ck, "trd_app", GQL_TRD_APP, "TrdApp", "buyId", 200)
+            stage_trd_app(c, ck, a.date_from, a.date_to)
         elif s == "rnu":
             stage_rnu(c, ck)
         else:

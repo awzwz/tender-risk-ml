@@ -1,0 +1,26 @@
+# secrets
+.env
+
+# data — raw/processed snapshots are large; shared via release assets / LFS
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+*.egg-info/
+
+# models / artifacts
+models/
+*.joblib
+*.pkl
+
+# os / ide
+.DS_Store
+.vscode/
+.idea/

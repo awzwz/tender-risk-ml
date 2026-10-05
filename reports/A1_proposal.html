@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tender Risk ML — Project Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #16202e;
+    --ink-2: #3c4859;
+    --muted: #6b7686;
+    --line: #dfe3ea;
+    --bg-soft: #f4f6f9;
+    --accent: #1d4ed8;
+    --accent-soft: #e8eefc;
+    --warn: #c2410c;
+    --warn-soft: #fdf0e8;
+    --ok: #0f766e;
+    --sans: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+  }
+  @page {
+    size: A4;
+    margin: 18mm 17mm 18mm 17mm;
+    @bottom-left  { content: "Tender Risk ML · Project Proposal"; font: 500 7.5pt var(--sans); color: #9aa3b1; }
+    @bottom-right { content: counter(page) " / " counter(pages); font: 500 7.5pt var(--sans); color: #9aa3b1; }
+  }
+  @page :first { @bottom-left { content: none; } }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; color: var(--ink); font: 400 10pt/1.55 var(--serif); }
+
+  /* ── cover header ── */
+  .cover { padding: 4mm 0 7mm; border-bottom: 1.5pt solid var(--ink); margin-bottom: 7mm; }
+  .eyebrow { font: 600 8pt var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  h1.title { font: 800 27pt/1.08 var(--sans); letter-spacing: -.02em; margin: 3mm 0 2.5mm; }
+  .subtitle { font: 400 12.5pt/1.4 var(--serif); color: var(--ink-2); max-width: 150mm; margin: 0; }
+  .meta { display: flex; gap: 9mm; margin-top: 5mm; font: 500 8.5pt var(--sans); color: var(--muted); }
+  .meta b { color: var(--ink); font-weight: 600; display: block; font-size: 9pt; }
+  .meta a { color: var(--accent); text-decoration: none; }
+
+  /* ── stat band ── */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin: 0 0 7mm; }
+  .stat { background: var(--bg-soft); border-radius: 3mm; padding: 3.5mm 4mm; }
+  .stat .n { font: 700 17pt/1.1 var(--sans); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .stat .l { font: 500 7.5pt/1.35 var(--sans); color: var(--muted); margin-top: 1mm; }
+  .stat.hl { background: var(--warn-soft); }
+  .stat.hl .n { color: var(--warn); }
+
+  /* ── sections ── */
+  section { margin-bottom: 6mm; }
+  h2 { font: 700 13.5pt/1.25 var(--sans); letter-spacing: -.01em; margin: 0 0 2.5mm; display: flex; align-items: baseline; gap: 3mm; break-after: avoid; }
+  h2 .num { font: 700 9pt var(--sans); color: var(--accent); background: var(--accent-soft); border-radius: 1.5mm; padding: .6mm 2mm; }
+  h3 { font: 600 10.5pt var(--sans); margin: 4.5mm 0 1.5mm; color: var(--ink); break-after: avoid; }
+  p { margin: 0 0 2.4mm; text-align: justify; hyphens: auto; }
+  strong { font-weight: 600; }
+  code { font: 400 8.4pt var(--mono); background: var(--bg-soft); border: .5pt solid var(--line); border-radius: 1mm; padding: .1mm 1mm; white-space: nowrap; }
+  .lead { font-size: 11pt; }
+
+  .title-box { font: 600 12pt/1.4 var(--sans); border-left: 3pt solid var(--accent); padding: 1mm 0 1mm 4mm; margin: 0; }
+
+  ul { margin: 0 0 2.5mm; padding-left: 5mm; }
+  li { margin-bottom: 1.4mm; }
+  li::marker { color: var(--accent); }
+
+  /* objectives as cards */
+  .objs { display: grid; gap: 2.2mm; counter-reset: obj; }
+  .obj { display: grid; grid-template-columns: 8mm 1fr; gap: 3mm; padding: 2.8mm 3.5mm; border: .6pt solid var(--line); border-radius: 2.5mm; break-inside: avoid; }
+  .obj::before { counter-increment: obj; content: counter(obj); font: 700 13pt var(--sans); color: var(--accent); }
+  .obj h4 { font: 600 9.8pt var(--sans); margin: .3mm 0 .8mm; }
+  .obj p { margin: 0; font-size: 9.3pt; text-align: left; }
+  .obj .tag { font: 600 6.8pt var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-left: 2mm; }
+
+  /* task type chips */
+  .chips { display: flex; gap: 2mm; flex-wrap: wrap; margin: 0 0 3mm; }
+  .chip { font: 600 8pt var(--sans); padding: 1.2mm 3mm; border-radius: 10mm; border: .7pt solid var(--line); color: var(--muted); }
+  .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .chip.half { background: var(--accent-soft); border-color: #b9c9f5; color: var(--accent); }
+
+  /* tables */
+  table { width: 100%; border-collapse: collapse; font: 400 8.4pt/1.45 var(--sans); margin: 1mm 0 2mm; break-inside: avoid; }
+  th { text-align: left; font-weight: 600; font-size: 7.4pt; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); border-bottom: 1pt solid var(--ink); padding: 1.6mm 2mm; }
+  td { border-bottom: .5pt solid var(--line); padding: 1.8mm 2mm; vertical-align: top; }
+  td.num { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+  td code { font-size: 7.8pt; }
+  .note { font: italic 400 8.3pt/1.45 var(--serif); color: var(--muted); margin-top: 1mm; }
+
+  /* target callout */
+  .callout { border: .8pt solid #f3c7ab; background: var(--warn-soft); border-radius: 3mm; padding: 4mm 4.5mm; margin: 2mm 0 3mm; break-inside: avoid; }
+  .callout .k { font: 700 7.5pt var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--warn); }
+  .callout .t { font: 700 12pt var(--sans); margin: 1mm 0 1.5mm; }
+  .callout p { margin: 0; font-size: 9.4pt; text-align: left; }
+  .dist { display: flex; height: 7mm; border-radius: 1.5mm; overflow: hidden; margin: 3.5mm 0 1.5mm; font: 600 7.5pt var(--sans); color: #fff; }
+  .dist div { display: flex; align-items: center; padding-left: 2mm; white-space: nowrap; overflow: hidden; }
+  .legend { display: flex; gap: 4mm; flex-wrap: wrap; font: 500 7.5pt var(--sans); color: var(--ink-2); }
+  .legend span::before { content: ""; display: inline-block; width: 2.4mm; height: 2.4mm; border-radius: .6mm; margin-right: 1.3mm; vertical-align: -.2mm; background: var(--c); }
+
+  .aux { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5mm; margin: 2mm 0 3mm; }
+  .aux div { border: .6pt solid var(--line); border-radius: 2mm; padding: 2.5mm 3mm; font: 400 8.2pt/1.4 var(--sans); color: var(--ink-2); break-inside: avoid; }
+  .aux b { display: block; font: 500 8pt var(--mono); color: var(--ink); margin-bottom: .8mm; }
+  .aux .pct { font: 700 11pt var(--sans); color: var(--ink); }
+
+  /* diagram */
+  figure { margin: 2mm 0 3mm; break-inside: avoid; }
+  figcaption { font: 500 7.5pt var(--sans); color: var(--muted); margin-top: 1mm; }
+  svg text { font-family: var(--sans); }
+
+  /* timeline */
+  .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 2mm 0 1mm; break-inside: avoid; }
+  .step { position: relative; padding: 0 3mm 0 0; }
+  .step .bar { height: 1.8mm; background: var(--line); margin-bottom: 3mm; position: relative; }
+  .step .bar::after { content: ""; position: absolute; left: 0; top: -1.3mm; width: 4.4mm; height: 4.4mm; border-radius: 50%; background: #fff; border: 1.3pt solid var(--accent); }
+  .step.now .bar { background: var(--accent); }
+  .step.now .bar::after { background: var(--accent); }
+  .step .w { font: 600 7pt var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .step h4 { font: 700 9.5pt/1.25 var(--sans); margin: .8mm 0 1.2mm; }
+  .step p { font: 400 7.9pt/1.45 var(--sans); color: var(--ink-2); text-align: left; margin: 0; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+  .feat { border-top: 1.2pt solid var(--ink); padding-top: 1.5mm; break-inside: avoid; }
+  .feat h4 { font: 700 8.6pt var(--sans); margin: 0 0 .8mm; }
+  .feat p { font: 400 8.3pt/1.45 var(--sans); color: var(--ink-2); margin: 0 0 3mm; text-align: left; }
+
+  .results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; }
+  .results div { background: var(--bg-soft); border-radius: 2.5mm; padding: 3.5mm; font: 400 8.6pt/1.45 var(--sans); break-inside: avoid; }
+  .results b { display: block; font-weight: 700; font-size: 9.3pt; margin-bottom: 1mm; }
+
+  .pb { break-before: page; }
+  section.keep, .keep { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <div class="eyebrow">Project Proposal · Assignment 1 — Problem &amp; Dataset</div>
+  <h1 class="title">Tender Risk ML</h1>
+  <p class="subtitle">Predicting problematic public procurements in Kazakhstan from open procurement data</p>
+  <div class="meta">
+    <div><b>Author</b>Aziz Abdulin</div>
+    <div><b>Repository</b><a href="https://github.com/awzwz/tender-risk-ml">github.com/awzwz/tender-risk-ml</a></div>
+    <div><b>Data source</b>OWS v3 API, goszakup.gov.kz</div>
+    <div><b>Task</b>Binary classification + NLP</div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="n">1.8M</div><div class="l">procurements per year on goszakup.gov.kz</div></div>
+  <div class="stat"><div class="n">630,762</div><div class="l">procurements in the dataset (Q1 2024)</div></div>
+  <div class="stat hl"><div class="n">≈ 23%</div><div class="l">of contracts terminated or never concluded</div></div>
+  <div class="stat"><div class="n">5</div><div class="l">linked tables: tenders, lots, bids, contracts, RNU</div></div>
+</div>
+
+<section>
+  <h2><span class="num">01</span>Project title</h2>
+  <p class="title-box">Tender Risk ML — predicting problematic public procurements in Kazakhstan from open procurement data</p>
+</section>
+
+<section>
+  <h2><span class="num">02</span>Problem description</h2>
+  <p class="lead">Kazakhstan's public procurement system (goszakup.gov.kz) processes roughly <strong>1.8 million procurements per year</strong> — 12.9 million in total as of September 2026, with over 40 million supplier bids — spending a significant share of the state budget.</p>
+  <p>Every procurement, lot, bid and contract is published through the open <strong>OWS v3 GraphQL API</strong>. Oversight bodies, journalists and auditors, however, work by hand: they can inspect a few hundred procurements a year, while the signs of a problematic procurement — a single bidder, an implausible price discount, a competitive procedure that “fails” and is re-awarded to a single source, a supplier with a history of terminated contracts — are scattered across several linked tables and are invisible at the level of one record.</p>
+  <p>The practical consequence is that a large share of contracts end badly. In a sample of FY2024 contracts, about <strong>one in five was terminated or never concluded</strong>, and about <strong>7% of procurements were cancelled</strong> after publication. Each such case means a repeated procedure, delayed goods or services, and often wasted budget. Detecting the procurements likely to fail <em>before</em> they fail would let a controlling body concentrate its limited attention where it matters.</p>
+  <p>An earlier engineering project by the author (Tender Radar) approached this with 31 hand-written risk rules. Rules are transparent but arbitrary: their thresholds were chosen by intuition, and there was no way to measure whether a “risky” procurement actually turned out badly. This project replaces intuition with a <strong>supervised model trained on observed outcomes</strong>, using the rules only as candidate features.</p>
+</section>
+
+<section class="keep">
+  <h2><span class="num">03</span>Project goal</h2>
+  <p>Build and evaluate a machine-learning classifier that, using only information available at the time a procurement is published and awarded, predicts whether the procurement will have a <strong>problematic outcome</strong> — defined as the resulting contract being terminated or never concluded — and identify which characteristics of a procurement are most predictive of that outcome.</p>
+</section>
+
+<section>
+  <h2><span class="num">04</span>Project objectives</h2>
+  <div class="objs">
+    <div class="obj"><div><h4>Dataset construction <span class="tag">A1</span></h4><p>Collect a linked snapshot of procurements published in Q1 2024 from the OWS v3 API — procurements, lots, bids, contracts and the register of unreliable suppliers — and publish it as a reproducible, documented dataset (collection script + data dictionary).</p></div></div>
+    <div class="obj"><div><h4>Data preparation and EDA <span class="tag">A2</span></h4><p>Clean and normalise the data (missing values, duplicates, currency/date formats, text normalisation for Russian/Kazakh lot names), explore distributions and class balance, and define the target rigorously with a leakage-safe <strong>time-based train/validation/test split</strong>.</p></div></div>
+    <div class="obj"><div><h4>Feature engineering <span class="tag">A2</span></h4><p>Derive tabular features (price, number of bidders, discount, trade method, customer and supplier history, the 31 Tender Radar indicators) and text features (TF-IDF over lot names and descriptions).</p></div></div>
+    <div class="obj"><div><h4>Baseline modelling and evaluation <span class="tag">Midterm</span></h4><p>Train and compare classical models (Logistic Regression, Random Forest, gradient boosting) on tabular + TF-IDF features; report ROC-AUC, PR-AUC and F1 on the held-out test period, with an interpretation of feature importance.</p></div></div>
+    <div class="obj"><div><h4>Model improvement <span class="tag">A3</span></h4><p>Optimise hyperparameters of the best classical model and add a text branch by <strong>fine-tuning a pre-trained multilingual transformer</strong> (transfer learning from <code>xlm-roberta-base</code> / <code>rubert-tiny2</code>) on lot descriptions; compare with, and ensemble into, the tabular model.</p></div></div>
+  </div>
+</section>
+
+<section class="keep">
+  <h2><span class="num">05</span>Type of AI task</h2>
+  <div class="chips">
+    <span class="chip on">✓ Classification</span>
+    <span class="chip half">＋ NLP component</span>
+    <span class="chip">Regression</span>
+    <span class="chip">Clustering</span>
+    <span class="chip">Computer vision</span>
+    <span class="chip">Generative AI</span>
+  </div>
+  <p><strong>Binary classification</strong> (supervised) on tabular data, with an <strong>NLP component</strong>: lot names and descriptions are free text in Russian and Kazakh, vectorised with TF-IDF for the baseline and, in the fine-tuning stage, encoded by a pre-trained transformer. Because positive cases are the minority (~20%), evaluation focuses on <strong>ROC-AUC, PR-AUC and F1</strong> rather than accuracy.</p>
+</section>
+
+<section>
+  <h2><span class="num">06</span>Dataset</h2>
+
+  <h3>6.1 Source and access</h3>
+  <ul>
+    <li><strong>Source:</strong> OWS v3 GraphQL API, <code>ows.goszakup.gov.kz/v3/graphql</code> — the official open-data interface of the public procurement portal. Access via a personal API token (valid until 13 Nov 2026). The data is public.</li>
+    <li><strong>Scope:</strong> all procurements with <code>publishDate</code> in <strong>2024-01-01 … 2024-03-31</strong> — <strong>630,762 procurements</strong>, about 35% of the 1,818,344 FY2024 procurements — and every linked record. Q1 2024 is old enough that every contract has had more than two years to reach a final status, so the outcome label is settled.</li>
+    <li><strong>Collection:</strong> <code>src/collect.py</code> — resumable <code>limit/after</code> pagination, stored as JSONL and Parquet. The snapshot is published as a GitHub release asset; the script reproduces it from scratch.</li>
+  </ul>
+
+  <h3>6.2 Entities</h3>
+  <figure>
+    <svg viewBox="0 0 640 168" width="100%" role="img" aria-label="Entity diagram">
+      <defs>
+        <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9aa3b1"/></marker>
+      </defs>
+      <g fill="none" stroke="#9aa3b1" stroke-width="1.2">
+        <path d="M205 75 H258" marker-end="url(#a)"/>
+        <path d="M382 60 C 420 60, 420 28, 452 28" marker-end="url(#a)"/>
+        <path d="M382 75 H452" marker-end="url(#a)"/>
+        <path d="M382 90 C 420 90, 420 122, 452 122" marker-end="url(#a)"/>
+        <path d="M112 100 V150 H536 V144" stroke-dasharray="3 3" marker-end="url(#a)"/>
+      </g>
+      <!-- rnu -->
+      <rect x="20" y="50" width="185" height="50" rx="8" fill="#fdf0e8" stroke="#f3c7ab"/>
+      <text x="36" y="71" font-size="12" font-weight="700" fill="#16202e">rnu</text>
+      <text x="36" y="88" font-size="10" fill="#6b7686">unreliable suppliers · 17,638</text>
+      <!-- trd_buy -->
+      <rect x="260" y="45" width="122" height="60" rx="8" fill="#1d4ed8"/>
+      <text x="276" y="69" font-size="12.5" font-weight="700" fill="#fff">trd_buy</text>
+      <text x="276" y="87" font-size="10" fill="#dbe4fb">tenders · 630,762</text>
+      <!-- children -->
+      <rect x="454" y="8" width="166" height="40" rx="8" fill="#f4f6f9" stroke="#dfe3ea"/>
+      <text x="468" y="26" font-size="11.5" font-weight="700" fill="#16202e">lots</text>
+      <text x="468" y="40" font-size="9.5" fill="#6b7686">~1.1M · text for NLP</text>
+      <rect x="454" y="55" width="166" height="40" rx="8" fill="#f4f6f9" stroke="#dfe3ea"/>
+      <text x="468" y="73" font-size="11.5" font-weight="700" fill="#16202e">trd_app</text>
+      <text x="468" y="87" font-size="9.5" fill="#6b7686">~2.5M bids · prices</text>
+      <rect x="454" y="102" width="166" height="40" rx="8" fill="#fdf0e8" stroke="#f3c7ab"/>
+      <text x="468" y="120" font-size="11.5" font-weight="700" fill="#16202e">contracts</text>
+      <text x="468" y="134" font-size="9.5" fill="#c2410c">~470K · holds the target</text>
+      <text x="208" y="68" font-size="8" fill="#6b7686">winner BIN</text>
+      <text x="240" y="162" font-size="8.5" fill="#6b7686">supplier BIN match → winner_in_rnu</text>
+    </svg>
+    <figcaption>Figure 1. Linked tables. Everything hangs off the procurement id; the RNU register joins through the supplier's BIN.</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th style="width:14%">Table</th><th style="width:14%">Grain</th><th style="width:19%">Rows (Q1 2024)</th><th>Key fields</th></tr></thead>
+    <tbody>
+      <tr><td><code>trd_buy</code></td><td>procurement</td><td class="num">630,762</td><td>id, name, trade method, status, total sum, number of lots, customer BIN, winner BIN, publish / start / end dates</td></tr>
+      <tr><td><code>lots</code></td><td>lot</td><td class="num">~1,100,000</td><td>procurement id, name RU/KZ, description, amount, dumping flag, KTRU code, status</td></tr>
+      <tr><td><code>trd_app</code></td><td>bid</td><td class="num">~2,500,000</td><td>procurement id, supplier BIN, per-lot price and discount</td></tr>
+      <tr><td><code>contracts</code></td><td>contract</td><td class="num">~470,000</td><td>procurement id, supplier BIN, status, cancellation reason, sums, planned / actual execution dates</td></tr>
+      <tr><td><code>rnu</code></td><td>supplier entry</td><td class="num">17,638</td><td>supplier BIN, start / end dates in the register (all-time)</td></tr>
+    </tbody>
+  </table>
+  <p class="note">The trd_buy count is exact (fully collected). The lots estimate is extrapolated from the first 195,000 procurements collected (1.8 lots per procurement); the others from a pilot sample. Exact counts will be reported in A2.</p>
+
+  <h3>6.3 Target variable</h3>
+  <div class="callout">
+    <div class="k">Primary target</div>
+    <div class="t"><code style="font-size:10pt">contract_failed</code> — binary, one row per procurement</div>
+    <p><strong>1</strong> if the contract from the procurement has status <em>Terminated</em> (code 350), <em>Awaiting termination</em> (345) or <em>Not concluded</em> (330); <strong>0</strong> if it is <em>Active</em>, <em>Amended</em> or <em>Executed</em>. Procurements without any contract record are excluded from the primary task.</p>
+    <div class="dist">
+      <div style="width:23%;background:#c2410c">23% failed</div>
+      <div style="width:68%;background:#1d4ed8">68% amended</div>
+      <div style="width:6%;background:#0f766e"></div>
+      <div style="width:3%;background:#9aa3b1"></div>
+    </div>
+    <div class="legend">
+      <span style="--c:#c2410c">Failed · 350/345/330 · <b>label 1</b></span>
+      <span style="--c:#1d4ed8">Amended · 455</span>
+      <span style="--c:#0f766e">Active / executed · 190/390/460 · 6%</span>
+      <span style="--c:#9aa3b1">Other · 3%</span>
+    </div>
+    <p class="note" style="margin-top:2mm">Sample of the first 400 FY2024 contracts.</p>
+  </div>
+
+  <p style="margin-bottom:1mm"><strong>Auxiliary labels</strong> kept in the dataset for extended analysis:</p>
+  <div class="aux">
+    <div><b>tender_cancelled</b><span class="pct">~7%</span> · procurement status Cancelled (430) or Refused (410)</div>
+    <div><b>winner_in_rnu</b><span class="pct">rare</span> · the winner later appears in the register of unreliable suppliers</div>
+    <div><b>single_source_after_failed</b><span class="pct">~19%</span> · re-awarded to a single source after a failed procedure</div>
+  </div>
+  <p><strong>Why an observed outcome rather than the rule-based risk score:</strong> a model trained on labels produced by hand-written rules only learns those rules. Contract termination is a real, independently recorded event, so the model's quality can be measured honestly and the rules can be tested as features.</p>
+
+  <h3>6.4 Leakage control</h3>
+  <p>Only fields known at publication/award time enter the feature set: procurement and lot attributes, bids, winner identity, and the <em>history</em> of the customer and the supplier <strong>strictly before</strong> the procurement's publish date. Contract execution fields (<code>faktSum</code>, <code>faktExecDate</code>, status) are used for the label only. The split is by time — <strong>train on January–February, validate/test on March 2024</strong> — so that no future information leaks into training.</p>
+
+  <h3>6.5 Feature groups (preliminary)</h3>
+  <div class="two">
+    <div>
+      <div class="feat"><h4>Procurement</h4><p>Trade method, subject type, total sum, number of lots, planned duration, repeat flag, single-organiser flag, construction / light-industry flags, region (KATO).</p></div>
+      <div class="feat"><h4>Competition</h4><p>Number of bidders, bids per lot, winner's discount, dumping flag, price dispersion among bids.</p></div>
+      <div class="feat"><h4>Text</h4><p>TF-IDF (word + character n-grams) of lot names and descriptions; transformer embeddings in A3.</p></div>
+    </div>
+    <div>
+      <div class="feat"><h4>Supplier / customer history</h4><p>Computed strictly before the publish date: number of prior contracts, share terminated, share of wins with the same customer, presence in RNU.</p></div>
+      <div class="feat"><h4>Rule indicators</h4><p>The 31 Tender Radar indicators, re-implemented in pandas and used as input features rather than as labels.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">07</span>Plan and deliverables</h2>
+  <div class="timeline">
+    <div class="step now"><div class="bar"></div><div class="w">Weeks 1–2</div><h4>A1 · Problem &amp; Dataset</h4><p>This proposal; raw Q1 2024 snapshot collected and published.</p></div>
+    <div class="step"><div class="bar"></div><div class="w">Weeks 3–4</div><h4>A2 · Data Preparation</h4><p>Structure, missing values, duplicates, cleaning, EDA, visualisations, features + target, time split; brief report.</p></div>
+    <div class="step"><div class="bar"></div><div class="w">Week 5</div><h4>Midterm · Baseline</h4><p>Logistic Regression + Random Forest, ROC-AUC / PR-AUC / F1, slides, justification of model choice.</p></div>
+    <div class="step"><div class="bar"></div><div class="w">After midterm</div><h4>A3 · Tuning &amp; Fine-tuning</h4><p>LightGBM, hyperparameter optimisation, fine-tuned transformer on lot text, ensemble; experimental results.</p></div>
+  </div>
+</section>
+
+<section class="keep">
+  <h2><span class="num">08</span>Expected results</h2>
+  <div class="results">
+    <div><b>Open dataset</b>A public, reproducible dataset of Q1 2024 procurements with a documented outcome label.</div>
+    <div><b>A better classifier</b>ROC-AUC clearly above the rule-based score used as a baseline comparator.</div>
+    <div><b>Risk drivers</b>A ranked list of procurement characteristics most associated with contract failure — the practically useful output for an auditor.</div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">09</span>Risks and mitigations</h2>
+  <table>
+    <thead><tr><th style="width:38%">Risk</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td>API token expires 13 Nov 2026</td><td>Full snapshot collected in September; all later work is offline.</td></tr>
+      <tr><td>Class imbalance</td><td>PR-AUC / F1 as metrics; class weights; threshold tuning.</td></tr>
+      <tr><td>Label noise — termination “by mutual agreement” is not always a failure</td><td>Keep cancellation reason codes; report results on the strict subset (terminated for breach / not concluded) as a sensitivity analysis.</td></tr>
+      <tr><td>Text in two languages</td><td>Multilingual models (XLM-R); Kazakh-only lots handled via the Russian name, which is almost always present.</td></tr>
+      <tr><td>Compute for transformer fine-tuning</td><td><code>rubert-tiny2</code> fits on CPU / Colab; LoRA for larger models.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>A2 Brief Research Report — Tender Risk ML</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 15mm 16mm 14mm 16mm;
+    @bottom-right { content: counter(page) " / " counter(pages); font: 500 7.5pt "Inter", sans-serif; color: #8a94a6; } }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; color: #18202c; font: 400 9.6pt/1.45 "Source Serif 4", Georgia, serif; }
+  .head { border-bottom: 1.2pt solid #18202c; padding-bottom: 3mm; margin-bottom: 3.5mm; }
+  .eyebrow { font: 600 7.5pt "Inter", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #1d4ed8; }
+  h1 { font: 700 15pt/1.2 "Inter", sans-serif; margin: 1.5mm 0 1.5mm; letter-spacing: -.01em; }
+  .meta { font: 500 8pt "Inter", sans-serif; color: #5b6576; }
+  .meta a { color: #1d4ed8; text-decoration: none; }
+  h2 { font: 700 10.5pt "Inter", sans-serif; margin: 3.2mm 0 1.2mm; color: #18202c; }
+  p { margin: 0 0 1.8mm; text-align: justify; hyphens: auto; }
+  ul { margin: 0 0 1.8mm; padding-left: 4.5mm; } li { margin-bottom: .9mm; text-align: justify; }
+  b { font-weight: 600; }
+  .fig { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin: 1.5mm 0 1mm; }
+  .fig img { width: 100%; border: .4pt solid #dde2ea; }
+  .cap { font: 400 7.6pt/1.35 "Inter", sans-serif; color: #5b6576; margin: 0 0 2mm; }
+  table { width: 100%; border-collapse: collapse; font: 400 8pt/1.35 "Inter", sans-serif; margin: 1mm 0 1.5mm; }
+  th { text-align: left; font-weight: 600; border-bottom: .9pt solid #18202c; padding: 1mm 1.5mm; font-size: 7.6pt; }
+  td { border-bottom: .4pt solid #dde2ea; padding: 1mm 1.5mm; }
+  td.n { text-align: right; font-variant-numeric: tabular-nums; }
+  .refs p { font-size: 8pt; line-height: 1.35; text-align: left; margin-bottom: .9mm; padding-left: 4mm; text-indent: -4mm; }
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div class="eyebrow">Assignment 2 · Data Preparation &amp; Baseline · Brief research report</div>
+  <h1>Which public-procurement contracts fail? Evidence from 359 thousand procurements in Kazakhstan</h1>
+  <div class="meta">Aziz Abdulin · October 2026 · Code &amp; notebook: <a href="https://github.com/awzwz/tender-risk-ml">github.com/awzwz/tender-risk-ml</a> (notebooks/02_data_preparation.ipynb)</div>
+</div>
+
+<h2>1. Problem</h2>
+<p>Kazakhstan's e-procurement portal handles about 1.8 million procurements a year. Some of the resulting contracts are
+terminated or never signed, which forces repeated procedures, delays delivery and wastes public money. Oversight bodies
+can audit only a small fraction of procurements, so they need to know <i>in advance</i> where failures are likely. Existing
+risk-scoring approaches rely mostly on expert "red flags" such as single bidding (Fazekas et al., 2016; Fazekas &amp; Kocsis,
+2020). This study asks which characteristics known at the moment of award are associated with contract failure
+(RQ1: method and competition; RQ2: value, subject, region) and whether they predict failure on a later period (RQ3).</p>
+
+<h2>2. Data</h2>
+<p>The data come from the official open-data API of the portal (OWS v3, Ministry of Finance of the Republic of
+Kazakhstan). All 630,762 procurements published between 1 January and 31 March 2024 were collected together with their
+1.29 million lots, 1.07 million supplier applications, 556 thousand contract records and the register of unreliable
+suppliers (RNU). Q1 2024 was chosen so that every contract has had more than two years to reach a final status.
+The raw snapshot is published as a GitHub release, which makes the notebook fully reproducible without an API token.</p>
+
+<h2>3. Methodology</h2>
+<p>Data quality was assessed per table (missing values, duplicates, wrong types, invalid values, outliers, inconsistent
+categories, referential integrity). The key cleaning step was collapsing contract amendments: 13.6 % of contract rows are
+later versions of the same contract, and only the last version carries the final status. The unit of analysis is a
+procurement that produced at least one contract (n = 358,789). The target <b>contract_failed</b> equals 1 if any of its
+contracts ended as <i>terminated</i> (unilaterally or by agreement) or <i>not concluded</i>. Twenty features describing the
+procedure, its value, lots, competition and organiser were built using information available at award time only; a
+leakage audit excluded execution fields, system timestamps, procurement final status and the RNU register, whose
+entries are a consequence of termination (Kaufman et al., 2012). Data were split chronologically (train: Jan–Feb,
+validation: 1–15 Mar, test: 16–31 Mar; 74/15/11 %). A class-weighted logistic regression served as the baseline;
+because classes are imbalanced, it was evaluated with ROC-AUC, PR-AUC and F1 (Saito &amp; Rehmsmeier, 2015).</p>
+
+<h2>4. Results</h2>
+<div class="fig">
+  <img src="../figures/fig03_value.png" alt="Failure rate by value decile">
+  <img src="../figures/fig05_bidders.png" alt="Failure rate by number of bidders">
+</div>
+<div class="cap">Figure 1 (Figures 3 and 5 of the notebook). Contract failure rate by procurement-value decile (left) and by number of
+bidders, overall and within a procurement method (right). Source: author's calculations, OWS v3, Q1 2024.</div>
+<ul>
+  <li><b>Base rate.</b> 6.6 % of procurements end with a failed contract (4.5 % under a strict definition without terminations by
+  agreement); the most common failure is unilateral termination. The rate is stable across weeks (6.4–6.8 % per month).</li>
+  <li><b>RQ1 — method and competition.</b> Automatic lowest-price requests for quotations fail most often (9.0 %), single-source purchases
+  after a failed tender 3.2 %, framework call-offs 1.2 %. Single-bidder procurements look safest overall (4.4 %), but this is a
+  Simpson's paradox: within the same method one bidder is riskier than two (e.g. 9.8 % vs 5.8 % for requests for
+  quotations), supporting H1. The effect of competition is U-shaped — with 6+ bidders failure rises to 11 %, consistent with
+  the winner's curse in price competition (Thaler, 1988).</li>
+  <li><b>RQ2 — value, subject, region.</b> Failure rises tenfold from the cheapest to the most expensive value decile (1.5 % → 16.5 %),
+  supporting H2. Goods fail twice as often as services (9.1 % vs 4.2 %); Astana, Shymkent and Almaty have roughly twice the
+  rate of several regions (10.6 % vs ≈ 5 %).</li>
+  <li><b>RQ3 — predictability.</b> The baseline generalises to the unseen test period (table), supporting H3: half of the 1 % of
+  procurements it ranks as most risky actually failed, 7.6 times the base rate.</li>
+</ul>
+<table>
+  <tr><th>Model (test period, 16–31 March 2024)</th><th>ROC-AUC</th><th>PR-AUC</th><th>F1</th><th>Precision in top 1 %</th></tr>
+  <tr><td>Prior classifier (no model)</td><td class="n">0.500</td><td class="n">0.066</td><td class="n">—</td><td class="n">0.057</td></tr>
+  <tr><td>Logistic regression (class-weighted, threshold tuned on validation)</td><td class="n">0.792</td><td class="n">0.262</td><td class="n">0.324</td><td class="n">0.504</td></tr>
+</table>
+
+<h2>5. Limitations</h2>
+<p>The sample covers a single quarter, so seasonal effects are not represented. The label combines supplier failures with
+customer decisions (termination by agreement); a strict variant is stored for sensitivity analysis. Track records of
+suppliers and organisers cannot be used without leakage because the termination dates of earlier contracts are not
+observed. About 16 % of procurements have no priced offers and some offers use inconsistent units. The findings are
+associational, not causal.</p>
+
+<h2>6. Conclusions</h2>
+<p>Contract failure in Kazakhstan's procurement is neither rare nor random: it concentrates in large, goods-type,
+lowest-price procedures and in the largest cities, and it depends on competition in a U-shaped way. The popular
+"single bidder" red flag is meaningful only relative to the procurement method. Information available at award time
+already ranks risky procurements far better than chance, which justifies the next stage of the project: tree-based
+models able to capture the interactions found here, and text features from lot descriptions.</p>
+
+<h2>References</h2>
+<div class="refs">
+<p>Fazekas, M., &amp; Kocsis, G. (2020). Uncovering high-level corruption: Cross-national objective corruption risk indicators using public procurement data. <i>British Journal of Political Science, 50</i>(1), 155–164.</p>
+<p>Fazekas, M., Tóth, I. J., &amp; King, L. P. (2016). An objective corruption risk index using public procurement data. <i>European Journal on Criminal Policy and Research, 22</i>(3), 369–397.</p>
+<p>Kaufman, S., Rosset, S., Perlich, C., &amp; Stitelman, O. (2012). Leakage in data mining: Formulation, detection, and avoidance. <i>ACM Transactions on Knowledge Discovery from Data, 6</i>(4), 1–21.</p>
+<p>Ministry of Finance of the Republic of Kazakhstan. (2026). <i>Public procurement portal — open data API (OWS v3)</i>. https://ows.goszakup.gov.kz (accessed 6 October 2026).</p>
+<p>Saito, T., &amp; Rehmsmeier, M. (2015). The precision-recall plot is more informative than the ROC plot when evaluating binary classifiers on imbalanced datasets. <i>PLoS ONE, 10</i>(3), e0118432.</p>
+<p>Thaler, R. H. (1988). Anomalies: The winner's curse. <i>Journal of Economic Perspectives, 2</i>(1), 191–202.</p>
+</div>
+
+</body>
+</html>

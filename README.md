@@ -40,7 +40,7 @@ not as labels, so the model is trained against a real observed outcome.
 ## Setup
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
+python -m venv ~/.venvs/tender-risk-ml && source ~/.venvs/tender-risk-ml/bin/activate
 pip install -r requirements.txt
 cp .env.example .env   # put your OWS_TOKEN there
 ```
@@ -63,6 +63,6 @@ Raw snapshot is kept out of git because of size — it is published as a GitHub 
 | Assignment | Deliverable | Where |
 |---|---|---|
 | A1 Problem & Dataset | proposal (2–4 pages) + collected dataset | `reports/A1_proposal.md`, `src/collect.py` |
-| A2 Data Preparation & Baseline | notebook + brief report | `notebooks/02_*.ipynb`, `reports/A2_report.md` |
+| A2 Data Preparation & Baseline ✅ | notebook + brief report | `notebooks/02_data_preparation.ipynb` (HTML: `reports/A2_notebook.html`), `reports/A2_report.pdf` |
 | Midterm | working code, baseline model, ≥2 metrics, slides | `notebooks/03_*.ipynb`, `reports/midterm_slides.md` |
 | A3 Training & Fine-Tuning | improved model + experiments | `notebooks/04_*.ipynb`, `reports/A3_results.md` |

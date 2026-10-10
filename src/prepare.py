@@ -174,3 +174,72 @@ def build_model_table(con: duckdb.DuckDBPyConnection) -> pd.DataFrame:
         LEFT JOIN org_hist oh USING (id)
         ORDER BY b.publish_dt, b.id
     """).df()
+
+
+# ── modelling table used by the midterm / A3 notebooks ──────────────────────
+
+RELEASE_URL = "https://github.com/awzwz/tender-risk-ml/releases/download/data-v1/"
+
+NUM_FEATURES = ["log_total_sum", "n_lots", "bid_window_days", "publish_to_start_days", "n_bidders",
+                "bids_per_lot", "best_bid_ratio", "bid_price_cv", "org_prior_buys"]
+BIN_FEATURES = ["no_bids", "single_organizer", "construction", "light_industry", "disabled_org",
+                "any_dumping", "any_design_docs", "any_consulting"]
+CAT_FEATURES = ["trade_method", "subject_type", "region"]
+FEATURES = NUM_FEATURES + BIN_FEATURES + CAT_FEATURES
+TEXT_FEATURE = "lot_names"
+TARGET = "contract_failed"
+
+VAL_START, TEST_START = "2024-03-01", "2024-03-16"   # chronological split boundaries
+
+
+def finalize_model_table(df: pd.DataFrame) -> pd.DataFrame:
+    """Post-SQL cleaning steps C5–C9 of the A2 notebook plus the time-based split."""
+    import numpy as np
+
+    df = df.copy()
+    df["construction"] = (df["construction"] > 0).astype(int)                       # C5 mis-coded flag
+    bad = df["best_bid_ratio"].notna() & ~df["best_bid_ratio"].between(0.05, 1.0001)
+    df.loc[bad, "best_bid_ratio"] = np.nan                                           # C7 unit errors
+    df["log_total_sum"] = np.log10(df["total_sum"])                                  # C8 skewed value
+    df["no_bids"] = (df["n_bidders"] == 0).astype(int)                               # C9 structural gap
+    df["split"] = np.select([df["publish_dt"] < VAL_START, df["publish_dt"] < TEST_START],
+                            ["train", "val"], "test")
+    keep = ["id", "publish_dt", "split", TARGET, "contract_failed_strict", "partially_executed",
+            TEXT_FEATURE] + FEATURES
+    return df[keep].reset_index(drop=True)
+
+
+def _download(url: str, dest: Path) -> None:
+    import urllib.request
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    print(f"downloading {dest.name} ...")
+    urllib.request.urlretrieve(url, dest)
+
+
+def load_model_table(root: Path, rebuild: bool = False) -> pd.DataFrame:
+    """
+    Return the clean modelling table (one row = one procurement with a contract).
+
+    Order of attempts: local data/processed/model_table.parquet -> the same file from the
+    GitHub release -> full rebuild from the raw snapshot (downloaded if missing).
+    """
+    processed = root / "data" / "processed" / "model_table.parquet"
+    if processed.exists() and not rebuild:
+        return pd.read_parquet(processed)
+    if not rebuild:
+        try:
+            _download(RELEASE_URL + processed.name, processed)
+            return pd.read_parquet(processed)
+        except Exception as e:  # no network / asset missing -> rebuild from raw
+            print(f"could not download the prepared table ({e}); rebuilding from raw data")
+    raw = root / "data" / "raw"
+    for t in TABLES:
+        if not (raw / f"{t}.parquet").exists():
+            _download(RELEASE_URL + f"{t}.parquet", raw / f"{t}.parquet")
+    con = connect(raw)
+    build_clean_tables(con)
+    df = finalize_model_table(build_model_table(con))
+    processed.parent.mkdir(parents=True, exist_ok=True)
+    df.to_parquet(processed, index=False)
+    return df

@@ -64,5 +64,5 @@ Raw snapshot is kept out of git because of size — it is published as a GitHub 
 |---|---|---|
 | A1 Problem & Dataset | proposal (2–4 pages) + collected dataset | `reports/A1_proposal.md`, `src/collect.py` |
 | A2 Data Preparation & Baseline ✅ | notebook + brief report | `notebooks/02_data_preparation.ipynb` (HTML: `reports/A2_notebook.html`), `reports/A2_report.pdf` |
-| Midterm | working code, baseline model, ≥2 metrics, slides | `notebooks/03_*.ipynb`, `reports/midterm_slides.md` |
+| Midterm ✅ | working code, baseline model, ≥2 metrics, slides | `notebooks/03_baseline.ipynb` (HTML: `reports/midterm_notebook.html`), `reports/midterm_slides.pptx`, `reports/midterm_metrics.csv` |
 | A3 Training & Fine-Tuning | improved model + experiments | `notebooks/04_*.ipynb`, `reports/A3_results.md` |

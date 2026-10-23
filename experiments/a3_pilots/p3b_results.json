@@ -1,0 +1,18 @@
+{
+  "model": "Qwen/Qwen2.5-0.5B",
+  "seq_len": 160,
+  "batch": 8,
+  "card_example": "Способ: Request for quotations. Предмет: Services. Регион: Pavlodar. Сумма: 39,000 тенге, лотов: 1. Участников: 1, лучшая цена к плановой: 100%. Приём заявок: 7 дн. Лоты: Услуги по технической поддержке сайтов",
+  "card_tokens": {
+    "median": 93.5,
+    "max": 156
+  },
+  "trainable_params": 8800000,
+  "total_params": 502834560,
+  "train_sec_per_step": 2.2487348318099976,
+  "train_examples_per_sec": 3.5575559585034897,
+  "peak_mps_mem_gb": 2.3191552,
+  "infer_examples_per_sec": 13.755110009435661,
+  "hours_per_epoch_40k": 3.12324282195833,
+  "hours_to_score_val_test": 1.8678916808321244
+}

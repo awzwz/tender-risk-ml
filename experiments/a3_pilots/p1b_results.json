@@ -1,0 +1,126 @@
+{
+  "status_screen": {
+    "n_st120": {
+      "share_with": 0.3724612515991293,
+      "fail_with": 0.09168256818947132,
+      "fail_without": 0.05120051164980413
+    },
+    "n_st310": {
+      "share_with": 0.1222166788836893,
+      "fail_with": 0.0979703534777651,
+      "fail_without": 0.06186594864402313
+    },
+    "n_st330": {
+      "share_with": 0.21815607501902232,
+      "fail_with": 0.023328904333605887,
+      "fail_without": 0.07826263648905414
+    },
+    "n_st360": {
+      "share_with": 0.43734339681539847,
+      "fail_with": 0.04972787641638095,
+      "fail_without": 0.07914303405572755
+    },
+    "n_st370": {
+      "share_with": 0.377441894818403,
+      "fail_with": 0.07816307542349102,
+      "fail_without": 0.059073184490099254
+    },
+    "n_st_rare": {
+      "share_with": 0.002798302066116854,
+      "fail_with": 0.32669322709163345,
+      "fail_without": 0.06554774515421273
+    }
+  },
+  "lgbm_base": {
+    "val_pr": 0.3434302889923091,
+    "test_pr": 0.3110037064773643,
+    "test_roc": 0.8078790175373372,
+    "n_features": 20,
+    "top_gain": {
+      "log_total_sum": 0.373,
+      "trade_method": 0.187,
+      "subject_type": 0.095,
+      "best_bid_ratio": 0.091,
+      "region": 0.068,
+      "bids_per_lot": 0.043,
+      "n_bidders": 0.04,
+      "org_prior_buys": 0.04
+    }
+  },
+  "lgbm_plus_bid_structure": {
+    "val_pr": 0.37133354659275586,
+    "test_pr": 0.34277665344993447,
+    "test_roc": 0.8212249602668049,
+    "n_features": 27,
+    "top_gain": {
+      "log_total_sum": 0.345,
+      "trade_method": 0.164,
+      "n_st360": 0.094,
+      "subject_type": 0.084,
+      "region": 0.055,
+      "best_bid_ratio": 0.054,
+      "n_st120": 0.04,
+      "n_lots": 0.033
+    }
+  },
+  "lgbm_plus_winner": {
+    "val_pr": 0.35929192361647905,
+    "test_pr": 0.3292812066472305,
+    "test_roc": 0.8173250991085956,
+    "n_features": 23,
+    "top_gain": {
+      "log_total_sum": 0.32,
+      "trade_method": 0.144,
+      "winner_prior_bids": 0.112,
+      "subject_type": 0.086,
+      "best_bid_ratio": 0.067,
+      "region": 0.063,
+      "org_prior_buys": 0.037,
+      "winner_individual": 0.032
+    }
+  },
+  "lgbm_plus_both": {
+    "val_pr": 0.4134142707970573,
+    "test_pr": 0.35086008254384915,
+    "test_roc": 0.8250673353050746,
+    "n_features": 30,
+    "top_gain": {
+      "log_total_sum": 0.315,
+      "trade_method": 0.143,
+      "winner_prior_bids": 0.108,
+      "subject_type": 0.078,
+      "n_st360": 0.06,
+      "region": 0.052,
+      "best_bid_ratio": 0.045,
+      "winner_individual": 0.031
+    }
+  },
+  "lgbm_plus_both_plus_rare_status": {
+    "val_pr": 0.41423084762946366,
+    "test_pr": 0.35572389125461995,
+    "test_roc": 0.8261614277003911,
+    "n_features": 31,
+    "top_gain": {
+      "log_total_sum": 0.309,
+      "trade_method": 0.14,
+      "winner_prior_bids": 0.106,
+      "subject_type": 0.078,
+      "n_st360": 0.057,
+      "region": 0.055,
+      "best_bid_ratio": 0.046,
+      "winner_individual": 0.032
+    }
+  },
+  "bootstrap_diff_both_minus_base": {
+    "ci95": [
+      0.029472373687412803,
+      0.04852565484957271
+    ],
+    "share_le_0": 0.0
+  },
+  "winner_individual_rate": {
+    "share": 0.45401057446019805,
+    "fail_if_individual": 0.06612889363635248,
+    "fail_if_legal_entity": 0.06640291993159601
+  }
+}

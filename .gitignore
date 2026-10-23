@@ -24,3 +24,6 @@ models/
 .DS_Store
 .vscode/
 .idea/
+
+# experiment logs (results are kept as JSON next to each script)
+experiments/**/*_log.txt

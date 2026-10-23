@@ -1,0 +1,36 @@
+{
+  "test_unseen_rows": 8707,
+  "test_unseen_fail_rate": 0.09670380153899162,
+  "text_tfidf_logreg": {
+    "val_pr": 0.2020333597087702,
+    "test_pr": 0.15252202098142892,
+    "test_roc": 0.6978066790623152,
+    "test_pr_seen": 0.12872980719013327,
+    "test_pr_unseen": 0.2001493358813367,
+    "test_roc_unseen": 0.6788582719375205
+  },
+  "text_rubert_frozen_logreg": {
+    "val_pr": 0.1656864230039204,
+    "test_pr": 0.1271319091763619,
+    "test_roc": 0.6700740846152465,
+    "test_pr_seen": 0.10608300673630665,
+    "test_pr_unseen": 0.172195988519342,
+    "test_roc_unseen": 0.6423737566687253
+  },
+  "lgbm_tabular": {
+    "val_pr": 0.3434302889923091,
+    "test_pr": 0.3110037064773643,
+    "test_roc": 0.8078790175373372,
+    "test_pr_seen": 0.28469372967381007,
+    "test_pr_unseen": 0.3670917141011876,
+    "test_roc_unseen": 0.8112717880262688
+  },
+  "lgbm_tabular_plus_rubert_pca32": {
+    "val_pr": 0.3975119539629959,
+    "test_pr": 0.3471212051232715,
+    "test_roc": 0.8219313703773099,
+    "test_pr_seen": 0.3270568533256117,
+    "test_pr_unseen": 0.39267248185112114,
+    "test_roc_unseen": 0.8170591015548908
+  }
+}

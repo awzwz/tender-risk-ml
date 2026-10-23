@@ -1,0 +1,13 @@
+{
+  "embed_unique_texts": {
+    "n": 60895,
+    "seconds": 19.36491584777832,
+    "dim": 312
+  },
+  "finetune_speed": {
+    "s_per_step_bs64": 0.08620879650115967,
+    "samples_per_s": 742.3836383000554,
+    "minutes_per_epoch_78584": 1.764227100064357,
+    "params": 29194394
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "coverage": {
+    "winner_age_years": 0.838,
+    "winner_kopf": 1.0,
+    "winner_kse": 1.0,
+    "winner_stype": 1.0,
+    "winner_oked2": 0.617,
+    "customer_kopf": 1.0,
+    "bidders_share_contact": 1.0,
+    "winner_shares_contact_with_bidder": 1.0,
+    "winner_shares_contact_with_customer": 1.0,
+    "winner_phone_degree": 0.837,
+    "winner_account_shared": 1.0,
+    "bidders_share_address": 1.0
+  },
+  "rate_by_flag": {
+    "winner_reregistered_later": {
+      "0": {
+        "mean": 0.0682,
+        "size": 146745
+      },
+      "1": {
+        "mean": 0.042,
+        "size": 127519
+      }
+    },
+    "winner_in_register": {
+      "0": {
+        "mean": 0.149,
+        "size": 26309
+      },
+      "1": {
+        "mean": 0.0597,
+        "size": 332480
+      }
+    },
+    "bidders_share_contact": {
+      "0": {
+        "mean": 0.065,
+        "size": 337172
+      },
+      "1": {
+        "mean": 0.0866,
+        "size": 21617
+      }
+    },
+    "winner_shares_contact_with_bidder": {
+      "0": {
+        "mean": 0.0666,
+        "size": 350976
+      },
+      "1": {
+        "mean": 0.0521,
+        "size": 7813
+      }
+    },
+    "winner_shares_contact_with_customer": {
+      "0": {
+        "mean": 0.0663,
+        "size": 358658
+      },
+      "1": {
+        "mean": 0.0305,
+        "size": 131
+      }
+    },
+    "winner_account_shared": {
+      "0": {
+        "mean": 0.0663,
+        "size": 358759
+      },
+      "1": {
+        "mean": 0.2333,
+        "size": 30
+      }
+    },
+    "bidders_share_address": {
+      "0": {
+        "mean": 0.0657,
+        "size": 353195
+      },
+      "1": {
+        "mean": 0.1035,
+        "size": 5594
+      }
+    }
+  },
+  "rate_by_age_bucket": {
+    "(0, 1]": {
+      "mean": 0.1045,
+      "size": 23684
+    },
+    "(1, 2]": {
+      "mean": 0.0855,
+      "size": 17097
+    },
+    "(2, 5]": {
+      "mean": 0.0657,
+      "size": 34517
+    },
+    "(5, 10]": {
+      "mean": 0.0587,
+      "size": 39196
+    },
+    "(10, 100]": {
+      "mean": 0.0455,
+      "size": 32103
+    }
+  },
+  "F20": {
+    "n_features": 20,
+    "best_iter": 91,
+    "val_pr": 0.3434302889923091,
+    "test_pr": 0.3110037064773643,
+    "test_roc": 0.8078790175373372,
+    "test_p_at_1": 0.5732647814910026,
+    "test_r_at_5": 0.3116478379431243
+  },
+  "F20+COMP": {
+    "n_features": 26,
+    "best_iter": 146,
+    "val_pr": 0.35247280201095843,
+    "test_pr": 0.3097213375063397,
+    "test_roc": 0.8110377319271009,
+    "test_p_at_1": 0.583547557840617,
+    "test_r_at_5": 0.30112972341254385
+  },
+  "F20+CONT": {
+    "n_features": 24,
+    "best_iter": 104,
+    "val_pr": 0.3379477374476164,
+    "test_pr": 0.29835293104229155,
+    "test_roc": 0.8083730761566832,
+    "test_p_at_1": 0.570694087403599,
+    "test_r_at_5": 0.29645500584339696
+  },
+  "BASE": {
+    "n_features": 61,
+    "best_iter": 210,
+    "val_pr": 0.39704097061200994,
+    "test_pr": 0.35129643504495495,
+    "test_roc": 0.8231409324731137,
+    "test_p_at_1": 0.6606683804627249,
+    "test_r_at_5": 0.3346318659914297
+  },
+  "BASE+COMP+CONT": {
+    "n_features": 71,
+    "best_iter": 176,
+    "val_pr": 0.395813850002242,
+    "test_pr": 0.34220222019176433,
+    "test_roc": 0.8258621061874493,
+    "test_p_at_1": 0.6632390745501285,
+    "test_r_at_5": 0.3272302298402805
+  },
+  "F20+BANK": {
+    "n_features": 22,
+    "best_iter": 91,
+    "val_pr": 0.3434302889923091,
+    "test_pr": 0.3110037064773643,
+    "test_roc": 0.8078790175373372,
+    "test_p_at_1": 0.5732647814910026,
+    "test_r_at_5": 0.3116478379431243
+  },
+  "BASE+COMP+CONT+BANK": {
+    "n_features": 73,
+    "best_iter": 176,
+    "val_pr": 0.395813850002242,
+    "test_pr": 0.34220222019176433,
+    "test_roc": 0.8258621061874493,
+    "test_p_at_1": 0.6632390745501285,
+    "test_r_at_5": 0.3272302298402805
+  },
+  "bootstrap": {
+    "F20+COMP vs F20": {
+      "mean": -0.0014328401665949979,
+      "ci95": [
+        -0.00911959269844625,
+        0.006035445650813688
+      ]
+    },
+    "F20+CONT vs F20": {
+      "mean": -0.01268515365104699,
+      "ci95": [
+        -0.019250792462742444,
+        -0.005797683241672493
+      ]
+    },
+    "BASE+COMP+CONT vs BASE": {
+      "mean": -0.009017493061070064,
+      "ci95": [
+        -0.016439924194269654,
+        -0.0017920198581991744
+      ]
+    },
+    "F20+BANK vs F20": {
+      "mean": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    "BASE+COMP+CONT+BANK vs BASE": {
+      "mean": -0.009017493061070064,
+      "ci95": [
+        -0.016439924194269654,
+        -0.0017920198581991744
+      ]
+    }
+  }
+}

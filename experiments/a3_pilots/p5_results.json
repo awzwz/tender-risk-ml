@@ -1,0 +1,309 @@
+{
+  "drift_psi_train_vs_test": {
+    "log_total_sum": 0.035,
+    "n_lots": 0.026,
+    "bid_window_days": 0.38,
+    "publish_to_start_days": 0.019,
+    "n_bidders": 0.01,
+    "bids_per_lot": 0.0,
+    "best_bid_ratio": 0.034,
+    "bid_price_cv": 0.006,
+    "org_prior_buys": 1.118,
+    "org_buys_30d": 0.036,
+    "win_gap_min": 0.001,
+    "win_gap_mean": 0.0,
+    "identical_below_cap": 0.0,
+    "identical_at_cap": 0.0,
+    "late_share_1h": 0.0,
+    "apps_hours_before_end": 0.017,
+    "winner_hours_before_end": 0.009,
+    "pair_prior_contracts": 0.0,
+    "pair_share_of_customer": 0.0,
+    "customer_hhi": 0.311,
+    "winner_contracts_30d": 0.096,
+    "winner_top_customer_share": 0.048,
+    "winner_win_rate": 0.19,
+    "unit_price_vs_market": 0.007,
+    "unit_price_vs_market_max": 0.008,
+    "share_lots_benchmarked": 0.0,
+    "winner_individual": 0.0,
+    "winner_bids_30d": 0.036,
+    "winner_procs_30d": 0.036
+  },
+  "coverage_non_null": {
+    "win_gap_min": 1.0,
+    "win_gap_mean": 1.0,
+    "identical_below_cap": 1.0,
+    "identical_at_cap": 1.0,
+    "late_share_1h": 0.84,
+    "apps_hours_before_end": 0.84,
+    "winner_hours_before_end": 0.834,
+    "pair_prior_contracts": 1.0,
+    "pair_share_of_customer": 0.572,
+    "customer_hhi": 0.572,
+    "winner_contracts_30d": 1.0,
+    "winner_top_customer_share": 0.541,
+    "winner_win_rate": 0.687,
+    "unit_price_vs_market": 0.974,
+    "unit_price_vs_market_max": 0.974,
+    "share_lots_benchmarked": 1.0
+  },
+  "org_prior_buys_median_by_split": {
+    "test": 46.0,
+    "train": 16.0,
+    "val": 39.0
+  },
+  "org_buys_30d_median_by_split": {
+    "test": 15.0,
+    "train": 14.0,
+    "val": 17.0
+  },
+  "F20": {
+    "n_features": 20,
+    "best_iter": 91,
+    "val_pr": 0.3434302889923091,
+    "test_pr": 0.3110037064773643,
+    "test_roc": 0.8078790175373372,
+    "test_p_at_1": 0.5732647814910026,
+    "test_r_at_5": 0.3116478379431243
+  },
+  "F20_org30": {
+    "n_features": 20,
+    "best_iter": 152,
+    "val_pr": 0.34437981378813437,
+    "test_pr": 0.3013268431301429,
+    "test_roc": 0.8066748312255232,
+    "test_p_at_1": 0.5732647814910026,
+    "test_r_at_5": 0.304635761589404
+  },
+  "F20+BID": {
+    "n_features": 27,
+    "best_iter": 73,
+    "val_pr": 0.34689587995928023,
+    "test_pr": 0.3161281988670219,
+    "test_roc": 0.8083364298918922,
+    "test_p_at_1": 0.6041131105398457,
+    "test_r_at_5": 0.3155434359174133
+  },
+  "F20+PROC": {
+    "n_features": 24,
+    "best_iter": 69,
+    "val_pr": 0.34224938837020463,
+    "test_pr": 0.30853790331109154,
+    "test_roc": 0.8078606810323449,
+    "test_p_at_1": 0.5732647814910026,
+    "test_r_at_5": 0.31008959875340864
+  },
+  "F20+REL": {
+    "n_features": 26,
+    "best_iter": 82,
+    "val_pr": 0.3551167828778417,
+    "test_pr": 0.32290971704611454,
+    "test_roc": 0.8122018218441007,
+    "test_p_at_1": 0.6246786632390745,
+    "test_r_at_5": 0.3116478379431243
+  },
+  "F20+PRICE": {
+    "n_features": 23,
+    "best_iter": 209,
+    "val_pr": 0.3583963038411493,
+    "test_pr": 0.3191867200584941,
+    "test_roc": 0.8083155151502002,
+    "test_p_at_1": 0.6118251928020566,
+    "test_r_at_5": 0.3143747565251266
+  },
+  "F20+W_old": {
+    "n_features": 23,
+    "best_iter": 135,
+    "val_pr": 0.36224124664771196,
+    "test_pr": 0.33590748406073256,
+    "test_roc": 0.8188457452536534,
+    "test_p_at_1": 0.6349614395886889,
+    "test_r_at_5": 0.32294507206856254
+  },
+  "F20+W_first": {
+    "n_features": 23,
+    "best_iter": 91,
+    "val_pr": 0.38337178089625407,
+    "test_pr": 0.35487338074290614,
+    "test_roc": 0.8228196050145655,
+    "test_p_at_1": 0.6735218508997429,
+    "test_r_at_5": 0.33969614335800546
+  },
+  "F20+W": {
+    "n_features": 23,
+    "best_iter": 194,
+    "val_pr": 0.338575574356299,
+    "test_pr": 0.30761330296296996,
+    "test_roc": 0.8079444255837336,
+    "test_p_at_1": 0.5578406169665809,
+    "test_r_at_5": 0.3077522399688352
+  },
+  "F20+W+T": {
+    "n_features": 55,
+    "best_iter": 147,
+    "val_pr": 0.38586767068927397,
+    "test_pr": 0.34051882668090094,
+    "test_roc": 0.8206622467345135,
+    "test_p_at_1": 0.6272493573264781,
+    "test_r_at_5": 0.32917802882742503
+  },
+  "F20+W+T+ALL": {
+    "n_features": 75,
+    "best_iter": 240,
+    "val_pr": 0.3985446859549072,
+    "test_pr": 0.3497859774664715,
+    "test_roc": 0.8229953155899725,
+    "test_p_at_1": 0.6555269922879178,
+    "test_r_at_5": 0.3346318659914297
+  },
+  "F20+T": {
+    "n_features": 52,
+    "best_iter": 376,
+    "val_pr": 0.3975119539629959,
+    "test_pr": 0.3471212051232715,
+    "test_roc": 0.8219313703773099,
+    "test_p_at_1": 0.6709511568123393,
+    "test_r_at_5": 0.33190494740942733
+  },
+  "F20+T+REL+PRICE": {
+    "n_features": 61,
+    "best_iter": 210,
+    "val_pr": 0.39704097061200994,
+    "test_pr": 0.35129643504495495,
+    "test_roc": 0.8231409324731137,
+    "test_p_at_1": 0.6606683804627249,
+    "test_r_at_5": 0.3346318659914297
+  },
+  "F20+T+REL+PRICE+BID": {
+    "n_features": 68,
+    "best_iter": 199,
+    "val_pr": 0.3969538709788909,
+    "test_pr": 0.3481814986609193,
+    "test_roc": 0.8233553861365195,
+    "test_p_at_1": 0.6375321336760925,
+    "test_r_at_5": 0.3408648227502922
+  },
+  "perm_importance_F20_val": {
+    "log_total_sum": 0.2306,
+    "trade_method": 0.1319,
+    "subject_type": 0.0684,
+    "bids_per_lot": 0.0324,
+    "best_bid_ratio": 0.0266,
+    "n_bidders": 0.0192,
+    "region": 0.0162,
+    "disabled_org": 0.006,
+    "bid_price_cv": 0.0058,
+    "n_lots": 0.004,
+    "org_prior_buys": 0.0033,
+    "bid_window_days": 0.0019,
+    "publish_to_start_days": 0.0006,
+    "any_dumping": 0.0003,
+    "any_design_docs": 0.0001,
+    "no_bids": 0.0,
+    "construction": -0.0,
+    "light_industry": -0.0,
+    "any_consulting": 0.0,
+    "single_organizer": -0.0001
+  },
+  "bootstrap": {
+    "F20_org30 vs F20": {
+      "mean": -0.009860166709468782,
+      "ci95": [
+        -0.015009060494592691,
+        -0.004475403353258758
+      ]
+    },
+    "F20+BID vs F20": {
+      "mean": 0.004950287944721049,
+      "ci95": [
+        0.0007061857223239834,
+        0.008995833208718463
+      ]
+    },
+    "F20+PROC vs F20": {
+      "mean": -0.0024892993038835537,
+      "ci95": [
+        -0.0045418471874545275,
+        -0.0004991988126552114
+      ]
+    },
+    "F20+REL vs F20": {
+      "mean": 0.011498582733525832,
+      "ci95": [
+        0.004532853226640194,
+        0.018786197147873204
+      ]
+    },
+    "F20+PRICE vs F20": {
+      "mean": 0.008140021007882508,
+      "ci95": [
+        0.0017397663180612922,
+        0.015226893069165586
+      ]
+    },
+    "F20+W_old vs F20": {
+      "mean": 0.024671221381276226,
+      "ci95": [
+        0.018031299596090213,
+        0.03121492607895122
+      ]
+    },
+    "F20+W_first vs F20": {
+      "mean": 0.043654888617775334,
+      "ci95": [
+        0.03626137331366614,
+        0.05077108252841931
+      ]
+    },
+    "F20+W vs F20": {
+      "mean": -0.0034662386592026755,
+      "ci95": [
+        -0.008538826889976878,
+        0.001614247910708695
+      ]
+    },
+    "F20+W+T vs F20": {
+      "mean": 0.029510785562599704,
+      "ci95": [
+        0.018574340083916903,
+        0.04072148941990696
+      ]
+    },
+    "F20+W+T+ALL vs F20+W+T": {
+      "mean": 0.008942443497447399,
+      "ci95": [
+        0.003029293339487621,
+        0.015196012439169003
+      ]
+    },
+    "F20+T vs F20": {
+      "mean": 0.03600498691436385,
+      "ci95": [
+        0.024888860409938415,
+        0.04765226741246928
+      ]
+    },
+    "F20+T+REL+PRICE vs F20+T": {
+      "mean": 0.004108111680090123,
+      "ci95": [
+        -0.0022849773612454408,
+        0.01041355570112951
+      ]
+    },
+    "F20+T+REL+PRICE+BID vs F20+T+REL+PRICE": {
+      "mean": -0.0032299120990140866,
+      "ci95": [
+        -0.006817914409721933,
+        0.0003296846341533222
+      ]
+    },
+    "F20+T+REL+PRICE+BID vs F20": {
+      "mean": 0.03688318649543989,
+      "ci95": [
+        0.02472031766288663,
+        0.04855433053179715
+      ]
+    }
+  }
+}

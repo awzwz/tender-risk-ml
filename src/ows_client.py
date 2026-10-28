@@ -103,7 +103,7 @@ class OWSClient:
             if not batch:
                 return
             page_info = body.get("extensions", {}).get("pageInfo", {})
-            last_id = page_info.get("lastId") or batch[-1]["id"]
+            last_id = page_info.get("lastId") or batch[-1].get("id") or batch[-1]["pid"]
             fetched += len(batch)
             yield batch, last_id
             if not page_info.get("hasNextPage", len(batch) == page_size):
@@ -191,3 +191,56 @@ query($limit: Int!, $after: Int) {
   }
 }
 """
+
+# Registered participants (companies, entrepreneurs, state bodies). Keyed by pid, not id.
+# email / phone / website are hashed by the collector before anything is written to disk.
+GQL_SUBJECT = """
+query($limit: Int!, $after: Int) {
+  Subjects(limit: $limit, after: $after) {
+    pid bin iin regdate crdate year
+    typeSupplier krpCode kseCode okedList refKopfCode katoList countryCode
+    markResident markSmallEmployer markNationalCompany markWorldCompany
+    markStateMonopoly markNaturalMonopoly markPatronymicProducer markPatronymicSupplyer markAssocWithDisab
+    qvazi customer supplier organizer isSingleOrg branches parentSubject
+    email phone website lastUpdateDate
+  }
+}
+"""
+
+# Supplier bank details and legal address from contracts (hashed by the collector).
+GQL_CONTRACT_BANK = """
+query($limit: Int!, $after: Int, $filter: ContractFiltersInput) {
+  Contract(limit: $limit, after: $after, filter: $filter) {
+    id trdBuyId supplierBiin supplierIik supplierBik supplierLegalAddress
+  }
+}
+"""
+
+# Annual plan points. `Plans` serves only the current version of each point; the version a lot
+# was published against (often superseded since, isActive=0) is reachable only via Lots { Plans }.
+PLAN_FIELDS = """
+    id rootrecordId idc sysSubjectsId sysOrganizatorId subjectBiin subjectNameRu nameRu descRu extraDescRu
+    refTradeMethodsId refUnitsCode codeGu count price amount refMonthsId refPlnPointStatusId plnPointYear
+    refSubjectTypeId refEnstruCode refFinsourceId refAbpCode isQvazi dateCreate timestamp refPointTypeId
+    sum1 sum2 sum3 supplyDateRu prepayment refJustificationId refAmendmentAgreemTypeId refAmendmAgreemJustifId
+    contractPrevPointId disablePersonId transferSysSubjectsId transferType refBudgetTypeId
+    createdinActId isActive activeActId isDeleted systemId indexDate
+    PlanActs { id planActNumber dateApproved planPreliminary refPlanStatusId }
+    PlansKato { refKatoCode count }
+    PlansSpec { abpCode fkrbProgramCode fkrbSubprogramCode ekrbCode amount }
+"""
+
+GQL_PLANS = """
+query($limit: Int!, $after: Int, $filter: PlansFiltersInput) {
+  Plans(limit: $limit, after: $after, filter: $filter) {%s}
+}
+""" % PLAN_FIELDS
+
+GQL_LOT_PLANS = """
+query($limit: Int!, $after: Int, $filter: LotsFiltersInput) {
+  Lots(limit: $limit, after: $after, filter: $filter) {
+    id trdBuyId pointList
+    Plans {%s}
+  }
+}
+""" % PLAN_FIELDS

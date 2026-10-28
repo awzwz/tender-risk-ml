@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>A3 Research Report — Tender Risk ML</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 15mm 16mm 14mm 16mm;
+    @bottom-right { content: counter(page) " / " counter(pages); font: 500 7.5pt "Inter", sans-serif; color: #8a94a6; } }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; color: #18202c; font: 400 9.6pt/1.45 "Source Serif 4", Georgia, serif; }
+  .head { border-bottom: 1.2pt solid #18202c; padding-bottom: 3mm; margin-bottom: 3.5mm; }
+  .eyebrow { font: 600 7.5pt "Inter", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #1d4ed8; }
+  h1 { font: 700 15pt/1.2 "Inter", sans-serif; margin: 1.5mm 0 1.5mm; letter-spacing: -.01em; }
+  .meta { font: 500 8pt "Inter", sans-serif; color: #5b6576; }
+  .meta a { color: #1d4ed8; text-decoration: none; }
+  h2 { font: 700 10.5pt "Inter", sans-serif; margin: 3.2mm 0 1.2mm; color: #18202c; }
+  h3 { font: 600 9.4pt "Inter", sans-serif; margin: 2.4mm 0 1mm; color: #18202c; }
+  p { margin: 0 0 1.8mm; text-align: justify; hyphens: auto; }
+  ul, ol { margin: 0 0 1.8mm; padding-left: 4.5mm; } li { margin-bottom: .9mm; text-align: justify; }
+  b { font-weight: 600; }
+  .fig { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin: 1.5mm 0 1mm; align-items: start; }
+  .fig img { width: 100%; border: .4pt solid #dde2ea; }
+  .cap { font: 400 7.6pt/1.35 "Inter", sans-serif; color: #5b6576; margin: 0 0 2mm; }
+  table { width: 100%; border-collapse: collapse; font: 400 7.9pt/1.35 "Inter", sans-serif; margin: 1mm 0 1.5mm; }
+  th { text-align: left; font-weight: 600; border-bottom: .9pt solid #18202c; padding: .9mm 1.4mm; font-size: 7.5pt; }
+  td { border-bottom: .4pt solid #dde2ea; padding: .9mm 1.4mm; vertical-align: top; }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.hl td { background: #eef3fd; font-weight: 600; }
+  .refs p { font-size: 8pt; line-height: 1.35; text-align: left; margin-bottom: .9mm; padding-left: 4mm; text-indent: -4mm; }
+  .avoid { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div class="eyebrow">Assignment 3 · Model Training &amp; Fine-Tuning · Research report</div>
+  <h1>Better model or better information? Boosting, fine-tuned encoders and a QLoRA-tuned LLM for predicting failed procurement contracts</h1>
+  <div class="meta">Aziz Abdulin · October 2026 · Code &amp; notebooks: <a href="https://github.com/awzwz/tender-risk-ml">github.com/awzwz/tender-risk-ml</a> (notebooks/04–07)</div>
+</div>
+
+<h2>1. Problem and setup</h2>
+<p>The project predicts, at the moment the winner of a public procurement in Kazakhstan is chosen, whether the resulting
+contract will <b>fail</b> — be terminated or never signed — so that oversight bodies can rank procurements for audit. The
+data are all 358,789 procurements published in Q1 2024 on the national portal (OWS v3 API) that produced a contract;
+6.6 % of them failed. The split is chronological: train = January–February, validation = 1–15 March (all choices),
+test = 16–31 March (scored once). The selection metric is <b>PR-AUC</b> (average precision), because an auditor uses the
+top of a ranked list; we also report ROC-AUC, F1 at a threshold chosen on validation, precision among the 1 % riskiest
+(<i>P@1%</i>), recall in the top 5 % and the Brier score, and every test difference comes with a paired bootstrap 95 %
+interval (1,000 resamples). The midterm baseline — a class-weighted logistic regression on 20 features — reached
+PR-AUC <b>0.262</b>. Assignment 3 asks how far this can be pushed and, more importantly, <i>where</i> the improvement comes
+from: a better model, its tuning, or new information about each procurement.</p>
+
+<h2>2. Methods</h2>
+<ul>
+<li><b>Model comparison and tuning (notebook 04).</b> Logistic regression, random forest, LightGBM (Ke et al., 2017) and CatBoost (Prokhorenkova et al., 2018) on the
+same 20 features. Logistic regression was tuned by exhaustive grid search (42 configurations, one predefined
+train → validation fold); the other three by Bayesian optimisation with Optuna/TPE (Akiba et al., 2019; 30 / 50 / 30 trials, early
+stopping on validation PR-AUC for boosting). Random-fold cross-validation was rejected because it mixes time periods.
+Separately we measured the effect of the decision threshold and of probability calibration (Platt scaling, isotonic
+regression).</li>
+<li><b>Transfer learning and fine-tuning on lot names (05a/05b).</b> Three frozen Russian encoders (rubert-tiny2 29 M,
+multilingual-e5-small 118 M, rubert-base-cased 178 M parameters) were used as feature extractors with a linear probe and,
+as 32 principal components, inside the tabular model. rubert-tiny2 was fully fine-tuned (all 29.2 M weights; AdamW,
+weight decay 0.01; learning rate searched in {2e-5, 5e-5, 1e-4}; linear warm-up 6 %; batch 64; 3 epochs with the best
+epoch chosen on validation; class-weighted cross-entropy; ≤ 20 rows per unique text; three seeds). Out-of-fold scores
+(5 folds grouped by text) allowed honest stacking. A TF-IDF model served as the no-transfer reference.</li>
+<li><b>LLM with QLoRA (06).</b> Qwen2.5-1.5B read a short Russian "card" of each procurement containing the same facts as
+the final tabular model plus the lot names, with a two-class classification head. Base weights were frozen in 4-bit NF4
+(double quantisation, fp16 compute; Dettmers et al., 2023); LoRA adapters (Hu et al., 2022) with r = 16, α = 32, dropout 0.05 on all seven linear projections
+(q, k, v, o, gate, up, down) and the full head were trained: <b>18,467,840 trainable parameters (1.2 %)</b>. Paged 8-bit
+AdamW, learning rate 2e-4 with cosine decay, effective batch 64, one epoch on 40,000 train procurements (1 : 3 failure
+sample), on a free Kaggle T4 (2.2 h training, 1.3 h inference). Full fine-tuning would need ≈ 25 GB without activations;
+QLoRA peaked at 2.7 GB. Controls: LightGBM on the same 40,000 rows and information, and on the full train set.</li>
+<li><b>Final model (07).</b> 61 features: the 20 midterm features, 32 text components and 9 leak-free versions of rule
+indicators from the earlier Tender Radar prototype — red flags in the sense of Fazekas &amp; Kocsis (2020) — (customer–supplier history, planned unit price against the market),
+all computed only from information dated before publication. Three candidates were compared on validation; ablations,
+SHAP (exact TreeSHAP; Lundberg et al., 2020) and per-segment lift explain the result.</li>
+</ul>
+
+<h2>3. Results</h2>
+<h3>3.1 Model family vs tuning</h3>
+<div class="avoid">
+<table>
+<tr><th>20 midterm features, test period</th><th class="n">default</th><th class="n">tuned</th><th class="n">tuning gain [95 % CI]</th><th>what mattered in the search</th></tr>
+<tr><td>Logistic regression</td><td class="n">0.262</td><td class="n">0.280</td><td class="n">+0.018 [+0.015, +0.022]</td><td>dropping class weights (L1, C = 0.1)</td></tr>
+<tr><td>Random forest</td><td class="n">0.249</td><td class="n">0.290</td><td class="n">+0.041 [+0.033, +0.049]</td><td>features per split (86 % of variance), depth 13</td></tr>
+<tr><td>LightGBM</td><td class="n">0.303</td><td class="n">0.304</td><td class="n">+0.001 [−0.007, +0.010]</td><td>learning rate only; early stopping keeps ~9 trees</td></tr>
+<tr class="hl"><td>CatBoost</td><td class="n">0.288</td><td class="n">0.311</td><td class="n">+0.023 [+0.016, +0.030]</td><td>depth 8, no class weights</td></tr>
+</table>
+</div>
+<p>Changing the model family is the largest gain on fixed features: tuned CatBoost reaches 0.311 against 0.262
+(+0.049 [+0.039, +0.059]); the two boosting libraries end within 0.007 of each other. Tuning helps when the defaults are
+poor (fully grown random-forest trees overfit and are <i>below</i> the linear baseline) and gives nothing for LightGBM, whose
+validation PR-AUC peaks after a handful of trees — the search ends up choosing where to stop. Convergence curves flatten
+after about 15 trials. The F1-optimal threshold chosen on validation raises test recall from 5 % (threshold 0.5) to 41 %
+at 34 % precision; Platt scaling cuts the Brier score of the class-weighted baseline from 0.200 to 0.055 without changing
+its ranking, while the tuned CatBoost — trained without class weights — is already calibrated.</p>
+
+<h3>3.2 The lot text: transfer learning vs fine-tuning</h3>
+<div class="avoid">
+<table>
+<tr><th>Text of the lot names</th><th class="n">alone, test</th><th class="n">alone, unseen texts</th><th class="n">added to 20-feature LightGBM (0.311)</th></tr>
+<tr><td>TF-IDF + logistic regression (no transfer)</td><td class="n">0.153</td><td class="n">0.200</td><td class="n">—</td></tr>
+<tr><td>Frozen rubert-tiny2 / e5-small / rubert-base + linear probe</td><td class="n">0.125 / 0.131 / 0.133</td><td class="n">0.172 / 0.189 / 0.187</td><td class="n">+0.036 / +0.028 / +0.025 (32 components)</td></tr>
+<tr><td>Fine-tuned rubert-tiny2 (mean of 3 seeds)</td><td class="n">0.154 ± 0.002</td><td class="n">0.232 ± 0.005</td><td class="n">+0.022 (stacking), +0.010 (blend)</td></tr>
+</table>
+</div>
+<p>Frozen encoders transfer general language knowledge (well above the 0.066 base rate) but alone lose to TF-IDF:
+similarity in general Russian is not procurement risk. Fine-tuning produces the best text model on names never seen in
+training (0.228–0.237 vs 0.200), so it learns task-specific vocabulary. Inside the tabular model, however, the 32 frozen
+rubert-tiny2 components are the best way to add text (+0.036 [+0.025, +0.048]): they tell the trees <i>what</i> is bought,
+whereas a single fine-tuned risk score discards that. Larger encoders brought no benefit for five-word catalogue names.</p>
+
+<h3>3.3 The LLM</h3>
+<p>The QLoRA-tuned Qwen2.5-1.5B reaches test PR-AUC <b>0.322</b> (ROC-AUC 0.808) — above every model on the 20 features —
+but below LightGBM given the same 40,000 rows and information — as expected from TabLLM, where the advantage of LLMs on
+tabular data disappears with many examples (Hegselmann et al., 2023) (0.334; difference −0.011 [−0.024, 0.000]) and further below
+LightGBM on the full train set (0.350; −0.028 [−0.041, −0.015]). Averaged with boosting (weight chosen on validation) it
+adds a small but significant amount: +0.008 [+0.005, +0.012] to LightGBM and +0.004 [+0.001, +0.007] to the final model,
+so its errors differ from those of the trees.</p>
+
+<div class="fig avoid">
+  <img src="../figures/a3_07_all_models.png" alt="All models">
+  <img src="../figures/a3_07_shap_importance.png" alt="SHAP">
+</div>
+<p class="cap">Figure 1. Left: test PR-AUC of every A3 model (dashed line: no model, 0.066). Right: mean absolute SHAP value
+of the final model's features (the 32 text components summed into one).</p>
+
+<h3>3.4 Final model, ablations and a leakage case</h3>
+<div class="avoid">
+<table>
+<tr><th>Model (test period, 38,981 procurements)</th><th class="n">PR-AUC [95 % CI]</th><th class="n">ROC-AUC</th><th class="n">P@1%</th><th class="n">R@5%</th></tr>
+<tr><td>No model</td><td class="n">0.066</td><td class="n">0.500</td><td class="n">0.057</td><td class="n">0.044</td></tr>
+<tr><td>Midterm baseline: logistic regression, 20 features</td><td class="n">0.262 [0.246, 0.280]</td><td class="n">0.792</td><td class="n">0.504</td><td class="n">0.263</td></tr>
+<tr><td>Tuned CatBoost, 20 features</td><td class="n">0.311 [0.293, 0.331]</td><td class="n">0.807</td><td class="n">0.573</td><td class="n">0.307</td></tr>
+<tr><td>Qwen2.5-1.5B + QLoRA</td><td class="n">0.322 [0.302, 0.342]</td><td class="n">0.808</td><td class="n">0.594</td><td class="n">0.320</td></tr>
+<tr class="hl"><td>Final: CatBoost, 61 features, calibrated</td><td class="n">0.364 [0.343, 0.385]</td><td class="n">0.827</td><td class="n">0.715</td><td class="n">0.337</td></tr>
+<tr><td>Final + LLM ensemble</td><td class="n">0.368 [0.347, 0.390]</td><td class="n">0.826</td><td class="n">0.715</td><td class="n">0.342</td></tr>
+</table>
+</div>
+<p>The final model was chosen on validation among three candidates (CatBoost 0.405, simple LightGBM 0.400, LightGBM re-tuned
+on the 61 features 0.386 — tuning again did not help). For an auditor checking 1 % of procurements (≈ 390 in the test
+fortnight) it finds <b>≈ 280 failed contracts instead of ≈ 196</b> with the midterm model. The gain splits into two
+similar steps: model family (+0.049) and new information with the same CatBoost (+0.053). Ablations show that the
+information is almost entirely the <b>lot text</b> (−0.025 [−0.034, −0.016] without it), while the customer–supplier
+history and price features, predictive on their own, add nothing once the text is present — consistent with the finding
+that corruption red flags are almost uncorrelated with execution outcomes (Decarolis &amp; Giorgiantonio, 2022). SHAP ranks value (0.53),
+method (0.46) and lot text (0.30) first, followed by the winner's past win rate (0.21). The largest improvements are for
+single-source purchases after a failed tender (lift over the base rate 2.2 → 8.0) and for the cheapest quarter of
+procurements (2.3 → 3.6), the midterm model's weakest segment.</p>
+<p><b>Leakage found and removed.</b> An earlier version of the research added "winner activity" features that looked like the
+third most important source of information (+0.025). The winner had been taken from the contracts table; inspecting the top
+of the ranked list showed that the contract signer had not even bid in 27 % of successful but 63 % of failed procurements —
+after a refusal the contract goes to someone else, so <i>who signed</i> is partly the outcome. Defining the winner from the
+announcement or the lowest bid (with the procedural tie-break) removes the gain entirely (−0.003 [−0.008, +0.002]). The
+leak was in the <i>link</i> between records, not in any single field — a case of the leakage patterns described by
+Kaufman et al. (2012).</p>
+
+<h2>4. Hypotheses</h2>
+<div class="avoid">
+<table>
+<tr><th>Hypothesis (written before the experiments)</th><th>Result</th></tr>
+<tr><td>H4 The model family matters more than tuning</td><td>Supported: family +0.04–0.05; tuning 0 to +0.04, large only for poor defaults</td></tr>
+<tr><td>H5 New information matters more than tuning</td><td>Supported: same CatBoost, +0.053 from information vs +0.023 from tuning</td></tr>
+<tr><td>H6 Text is useful with the table, not alone</td><td>Supported: text alone 0.156 at best; the largest addition to the table (+0.036)</td></tr>
+<tr><td>H7 Fine-tuning makes text a stronger signal than TF-IDF</td><td>Partly: a tie overall, a clear gain on unseen texts; frozen components are the better feature</td></tr>
+<tr><td>H8 The LLM is below boosting but helps in an ensemble</td><td>Supported: −0.028 vs full-data boosting; +0.004 [+0.001, +0.007] in the ensemble</td></tr>
+<tr><td>H9 Calibration fixes probabilities without changing the ranking</td><td>Supported: Brier 0.200 → 0.055 for the weighted baseline; PR-AUC unchanged</td></tr>
+</table>
+</div>
+
+<h2>5. Limitations</h2>
+<p>All models are trained on January–February 2024 and tested on the second half of March: end-of-year procurement, when
+budgets are rushed, may fail more often and for other reasons. The label is the final status on the portal, and
+terminations "by mutual agreement" include harmless cases (a strict label is kept in the data). Only information known at
+award time is used, which by design excludes the strongest signals of the rule-based prototype (contract execution,
+payments, fines): they are the outcome itself. GPU results (fine-tuning, LLM) can differ in the third decimal across
+hardware.</p>
+
+<h2>6. Conclusions</h2>
+<p>A better model and better information contribute about equally: gradient boosting and new information each add about
+0.05 PR-AUC, while hyper-parameter tuning beyond reasonable defaults adds little or nothing. The most valuable new
+information is the text of what is being bought, and the best way to give it to a tabular model is a compact frozen
+embedding rather than a fine-tuned score; fine-tuning pays off when texts are new. A 1.5 B-parameter LLM tuned with QLoRA
+on a free GPU learns the task but does not beat boosting on hundreds of thousands of rows; it is useful as a second
+opinion in an ensemble. The final model ranks failed contracts with PR-AUC 0.364 and calibrated probabilities, finding
+about 40 % more failures than the midterm model at the same audit budget. Methodologically, the main lesson is that a
+suspiciously large gain must be traced to the moment each value — and each link between records — becomes known.</p>
+
+<h2>References</h2>
+<div class="refs">
+<p>Akiba, T., Sano, S., Yanase, T., Ohta, T., &amp; Koyama, M. (2019). Optuna: A next-generation hyperparameter optimization framework. <i>KDD</i>, 2623–2631.</p>
+<p>Decarolis, F., &amp; Giorgiantonio, C. (2022). Corruption red flags in public procurement: New evidence from Italian calls for tenders. <i>EPJ Data Science</i>, 11(1).</p>
+<p>Dettmers, T., Pagnoni, A., Holtzman, A., &amp; Zettlemoyer, L. (2023). QLoRA: Efficient finetuning of quantized LLMs. <i>NeurIPS</i>.</p>
+<p>Fazekas, M., &amp; Kocsis, G. (2020). Uncovering high-level corruption: Cross-national objective corruption risk indicators using public procurement data. <i>British Journal of Political Science</i>, 50(1), 155–164.</p>
+<p>Hegselmann, S., Buendia, A., Lang, H., Agrawal, M., Jiang, X., &amp; Sontag, D. (2023). TabLLM: Few-shot classification of tabular data with large language models. <i>AISTATS</i>.</p>
+<p>Hu, E. J., Shen, Y., Wallis, P., et al. (2022). LoRA: Low-rank adaptation of large language models. <i>ICLR</i>.</p>
+<p>Kaufman, S., Rosset, S., Perlich, C., &amp; Stitelman, O. (2012). Leakage in data mining: Formulation, detection, and avoidance. <i>ACM TKDD</i>, 6(4), 15.</p>
+<p>Ke, G., Meng, Q., Finley, T., et al. (2017). LightGBM: A highly efficient gradient boosting decision tree. <i>NeurIPS</i>.</p>
+<p>Lundberg, S. M., Erion, G., Chen, H., et al. (2020). From local explanations to global understanding with explainable AI for trees. <i>Nature Machine Intelligence</i>, 2, 56–67.</p>
+<p>Prokhorenkova, L., Gusev, G., Vorobev, A., Dorogush, A. V., &amp; Gulin, A. (2018). CatBoost: Unbiased boosting with categorical features. <i>NeurIPS</i>.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "python": "3.14.5",
+  "platform": "macOS-26.7.1-arm64-arm-64bit-Mach-O",
+  "numpy": "2.5.3",
+  "pandas": "3.0.6",
+  "scikit-learn": "1.9.1",
+  "lightgbm": "4.7.0",
+  "catboost": "1.2.10",
+  "optuna": "5.0.0",
+  "duckdb": "1.5.6",
+  "torch": "2.14.1",
+  "transformers": "5.20.2",
+  "peft": "0.21.2",
+  "LLM run": "Kaggle, Tesla T4"
+}

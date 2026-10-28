@@ -1,0 +1,49 @@
+[{"stream_name":"stderr","time":79.989234248,"data":"Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n"}
+,{"stream_name":"stderr","time":109.659259568,"data":"\rLoading weights:   0%|          | 0/338 [00:00\u003c?, ?it/s]\rLoading weights:   0%|          | 1/338 [00:00\u003c00:55,  6.06it/s]\rLoading weights:   1%|          | 3/338 [00:00\u003c00:55,  6.03it/s]\rLoading weights:  12%|█▏        | 40/338 [00:00\u003c00:03, 92.26it/s]\rLoading weights:  23%|██▎       | 77/338 [00:00\u003c00:01, 159.07it/s]\rLoading weights:  34%|███▎      | 114/338 [00:00\u003c00:01, 214.17it/s]\rLoading weights:  45%|████▍     | 152/338 [00:00\u003c00:00, 258.70it/s]\rLoading weights:  56%|█████▌    | 188/338 [00:01\u003c00:00, 286.97it/s]\rLoading weights:  66%|██████▋   | 224/338 [00:01\u003c00:00, 307.23it/s]\rLoading weights:  76%|███████▋  | 258/338 [00:01\u003c00:00, 316.48it/s]\rLoading weights:  87%|████████▋ | 293/338 [00:01\u003c00:00, 324.76it/s]\rLoading weights:  97%|█████████▋| 329/338 [00:01\u003c00:00, 334.67it/s]\rLoading weights: 100%|██████████| 338/338 [00:01\u003c00:00, 237.13it/s]\n"}
+,{"stream_name":"stderr","time":109.736279118,"data":"[transformers] \u001b[1mQwen2ForSequenceClassification LOAD REPORT\u001b[0m from: Qwen/Qwen2.5-1.5B\n"}
+,{"stream_name":"stderr","time":109.73631041,"data":"Key          | Status  | \n"}
+,{"stream_name":"stderr","time":109.736315397,"data":"-------------+---------+-\n"}
+,{"stream_name":"stderr","time":109.73631914,"data":"score.weight | MISSING | \n"}
+,{"stream_name":"stderr","time":109.736322974,"data":"\n"}
+,{"stream_name":"stderr","time":109.736326496,"data":"Notes:\n"}
+,{"stream_name":"stderr","time":109.736330102,"data":"- MISSING:\tthose params were newly initialized because missing from the checkpoint. Consider training on your downstream task.\n"}
+,{"stream_name":"stdout","time":110.557554761,"data":"{'trainable': 18467840, 'total (4-bit weights counted as stored)': 907087360}\n"}
+,{"stream_name":"stderr","time":110.601198592,"data":"[transformers] `use_return_dict` is deprecated! Use `return_dict` instead!\n"}
+,{"stream_name":"stderr","time":110.601283252,"data":"[transformers] `use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.\n"}
+,{"stream_name":"stderr","time":111.350590935,"data":"/usr/local/lib/python3.13/dist-packages/torch/_dynamo/eval_frame.py:1263: UserWarning: torch.utils.checkpoint: the use_reentrant parameter should be passed explicitly. Starting in PyTorch 2.9, calling checkpoint without use_reentrant will raise an exception. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.\n"}
+,{"stream_name":"stderr","time":111.350666235,"data":"  return fn(*args, **kwargs)\n"}
+,{"stream_name":"stderr","time":123.34576183,"data":"/kaggle/src/script.py:71: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate\n"}
+,{"stream_name":"stderr","time":123.345812322,"data":"  scaler.step(opt); scaler.update(); opt.zero_grad(); sched.step(); step += 1\n"}
+,{"stream_name":"stdout","time":414.921832654,"data":"{'step': 25, 'of': 625, 'loss': 1.0235183043032885, 'lr': 0.00019993437928712978, 'hours': 0.08454269786675771}\n"}
+,{"stream_name":"stdout","time":728.639989094,"data":"{'step': 50, 'of': 625, 'loss': 0.5843166971206665, 'lr': 0.00019863164311926433, 'hours': 0.17168664601114061}\n"}
+,{"stream_name":"stdout","time":1043.994196566,"data":"{'step': 75, 'of': 625, 'loss': 0.5227110505104064, 'lr': 0.00019567993731818984, 'hours': 0.2592850534783469}\n"}
+,{"stream_name":"stdout","time":1364.020687344,"data":"{'step': 100, 'of': 625, 'loss': 0.5070179605484009, 'lr': 0.00019112860987282958, 'hours': 0.34818130261368224}\n"}
+,{"stream_name":"stdout","time":1681.751520413,"data":"{'step': 125, 'of': 625, 'loss': 0.5165163469314575, 'lr': 0.00018505375198992857, 'hours': 0.4364398647679223}\n"}
+,{"stream_name":"stdout","time":2003.626589569,"data":"{'step': 150, 'of': 625, 'loss': 0.4770438575744629, 'lr': 0.00017755692596590778, 'hours': 0.5258495791753133}\n"}
+,{"stream_name":"stdout","time":2323.726766729,"data":"{'step': 175, 'of': 625, 'loss': 0.5325876641273498, 'lr': 0.00016876346722120747, 'hours': 0.614766314095921}\n"}
+,{"stream_name":"stdout","time":2640.064888036,"data":"{'step': 200, 'of': 625, 'loss': 0.5123204874992371, 'lr': 0.0001588203888844982, 'hours': 0.702638000117408}\n"}
+,{"stream_name":"stdout","time":2957.861881404,"data":"{'step': 225, 'of': 625, 'loss': 0.48224047660827635, 'lr': 0.00014789392395889468, 'hours': 0.7909149457348718}\n"}
+,{"stream_name":"stdout","time":3274.034133634,"data":"{'step': 250, 'of': 625, 'loss': 0.4474517941474915, 'lr': 0.000136166746161379, 'hours': 0.8787405818700791}\n"}
+,{"stream_name":"stdout","time":3591.204302412,"data":"{'step': 275, 'of': 625, 'loss': 0.4555376958847046, 'lr': 0.00012383491589873123, 'hours': 0.9668434079488119}\n"}
+,{"stream_name":"stdout","time":3910.792957793,"data":"{'step': 300, 'of': 625, 'loss': 0.43596949338912966, 'lr': 0.00011110460243856052, 'hours': 1.055618027249972}\n"}
+,{"stream_name":"stdout","time":4228.57726783,"data":"{'step': 325, 'of': 625, 'loss': 0.4450814986228943, 'lr': 9.818863707570475e-05, 'hours': 1.1438914425505533}\n"}
+,{"stream_name":"stdout","time":4541.258383384,"data":"{'step': 350, 'of': 625, 'loss': 0.45463394045829775, 'lr': 8.530295491976337e-05, 'hours': 1.230747314757771}\n"}
+,{"stream_name":"stdout","time":4853.48709594,"data":"{'step': 375, 'of': 625, 'loss': 0.4708784392476082, 'lr': 7.266298479161318e-05, 'hours': 1.3174775075250202}\n"}
+,{"stream_name":"stdout","time":5169.496303725,"data":"{'step': 400, 'of': 625, 'loss': 0.44483558177947996, 'lr': 6.048004758429451e-05, 'hours': 1.4052578319443596}\n"}
+,{"stream_name":"stdout","time":5484.068757263,"data":"{'step': 425, 'of': 625, 'loss': 0.45371921062469484, 'lr': 4.895782330214291e-05, 'hours': 1.4926390788290236}\n"}
+,{"stream_name":"stdout","time":5799.307392544,"data":"{'step': 450, 'of': 625, 'loss': 0.4329564917087555, 'lr': 3.828894584384867e-05, 'hours': 1.580205380320549}\n"}
+,{"stream_name":"stdout","time":6114.20694175,"data":"{'step': 475, 'of': 625, 'loss': 0.44506566047668455, 'lr': 2.8651782459442176e-05, 'hours': 1.6676774683263567}\n"}
+,{"stream_name":"stdout","time":6428.780701588,"data":"{'step': 500, 'of': 625, 'loss': 0.4230637979507446, 'lr': 2.0207451723739633e-05, 'hours': 1.7550590705871583}\n"}
+,{"stream_name":"stdout","time":6744.68956917,"data":"{'step': 525, 'of': 625, 'loss': 0.4167650842666626, 'lr': 1.3097129881154934e-05, 'hours': 1.8428115544716517}\n"}
+,{"stream_name":"stdout","time":7058.595038257,"data":"{'step': 550, 'of': 625, 'loss': 0.44613032579421996, 'lr': 7.439690595656013e-06, 'hours': 1.9300074985954496}\n"}
+,{"stream_name":"stdout","time":7373.840275747,"data":"{'step': 575, 'of': 625, 'loss': 0.406153712272644, 'lr': 3.329717565622825e-06, 'hours': 2.0175756186909144}\n"}
+,{"stream_name":"stdout","time":7690.633735019,"data":"{'step': 600, 'of': 625, 'loss': 0.4293643093109131, 'lr': 8.359232296349162e-07, 'hours': 2.105573826763365}\n"}
+,{"stream_name":"stdout","time":8011.357500029,"data":"{'step': 625, 'of': 625, 'loss': 0.43923182010650635, 'lr': 0.0, 'hours': 2.194663736555311}\n"}
+,{"stream_name":"stdout","time":12550.687558238,"data":"done {'train_hours': 2.1946637515889273, 'inference_hours': 1.260772202875879}\n"}
+,{"stream_name":"stderr","time":12561.283615408,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":12561.283652824,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":12561.727703929,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":12561.727730995,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":12562.623039823,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":12564.10733558,"data":"[NbConvertApp] Writing 305108 bytes to __results__.html\n"}
+]

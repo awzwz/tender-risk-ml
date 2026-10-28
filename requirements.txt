@@ -19,8 +19,13 @@ matplotlib>=3.9
 seaborn>=0.13
 jupyter>=1.0
 
-# A3 — text branch (fine-tuning), install when needed:
-# torch
-# transformers>=4.44
-# datasets
-# peft
+# A3 — model comparison and tuning (notebook 04, 07)
+catboost>=1.2
+optuna>=4.0
+# A3 — text and LLM (notebooks 05a, 06; versions used: torch 2.14, transformers 5.20, peft 0.21)
+torch>=2.4
+transformers>=4.44
+tokenizers>=0.19
+# LLM training runs on Kaggle (CUDA); kaggle/06_llm_qlora/train_qlora.py installs bitsandbytes==0.50.2, peft==0.20.0
+kaggle>=1.7
+pytest>=8.0

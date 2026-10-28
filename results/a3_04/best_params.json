@@ -1,0 +1,42 @@
+{
+  "Logistic regression \u00b7 default": {
+    "penalty": "l2",
+    "C": 1.0,
+    "class_weight": "balanced"
+  },
+  "Random forest \u00b7 default": "sklearn defaults",
+  "LightGBM \u00b7 default": "lightgbm defaults",
+  "CatBoost \u00b7 default": "catboost defaults",
+  "Logistic regression \u00b7 tuned": {
+    "penalty": "l1",
+    "C": 0.1,
+    "class_weight": null
+  },
+  "LightGBM \u00b7 tuned": {
+    "learning_rate": 0.010632174720722741,
+    "num_leaves": 66,
+    "min_child_samples": 192,
+    "feature_fraction": 0.7992233575757431,
+    "bagging_fraction": 0.8887151254699078,
+    "bagging_freq": 1,
+    "lambda_l1": 3.428200684492422e-08,
+    "lambda_l2": 0.14491643252895162,
+    "scale_pos_weight": 8.413063162481299,
+    "n_estimators": 14
+  },
+  "Random forest \u00b7 tuned": {
+    "max_depth": 13,
+    "n_estimators": 600,
+    "min_samples_leaf": 10,
+    "max_features": 0.25473325385629186,
+    "class_weight": "none"
+  },
+  "CatBoost \u00b7 tuned": {
+    "auto_class_weights": "none",
+    "depth": 8,
+    "learning_rate": 0.03704953412275291,
+    "l2_leaf_reg": 3.8446069960937863,
+    "random_strength": 3.450281569905775,
+    "iterations": 462
+  }
+}

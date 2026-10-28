@@ -1,0 +1,7 @@
+,features,test PR-AUC,change vs final
+final model (all groups),61,0.34985883224317216,
+− text components,29,0.32454331006958564,"-0.025 [-0.034, -0.016]"
+− customer–supplier history,55,0.35344026693527186,"+0.004 [-0.002, +0.010]"
+− price vs market,58,0.3486119241708086,"-0.001 [-0.006, +0.004]"
+− history and price,52,0.3471211929230188,"-0.003 [-0.009, +0.004]"
+only the 20 midterm features,20,0.3110037064773643,"-0.039 [-0.051, -0.027]"

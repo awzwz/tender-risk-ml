@@ -1,0 +1,8 @@
+{
+  "learning_rate": 5e-05,
+  "epochs": 2,
+  "cap_per_text": 20,
+  "max_len": 64,
+  "batch": 64,
+  "warmup": 0.06
+}

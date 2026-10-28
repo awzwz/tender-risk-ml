@@ -1,0 +1,4 @@
+,test PR-AUC,gain over 20 features
+winner = min(BIN) among contracts (research v2),0.33590748406073256,"+0.025 [+0.018, +0.031]"
+winner = supplier of the first contract,0.3524679975988157,"+0.041 [+0.034, +0.048]"
+winner from announcement / lowest bid (leak-free),0.3079181604729826,"-0.003 [-0.008, +0.002]"

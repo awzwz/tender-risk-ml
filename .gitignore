@@ -27,3 +27,6 @@ models/
 
 # experiment logs (results are kept as JSON next to each script)
 experiments/**/*_log.txt
+results/a3_06/adapter/
+data/predictions/
+catboost_info/

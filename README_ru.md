@@ -101,7 +101,8 @@ python -m src.collect --date-from 2024-01-01 --date-to 2024-03-31
 | A1 Проблема и датасет ✅ | `reports/A1_proposal.docx`, `reports/A1_proposal.pdf` | `reports/A1_proposal_ru.pdf` |
 | A2 Подготовка данных ✅ | `notebooks/02_data_preparation.ipynb`, `reports/A2_report.pdf` | `notebooks/02_data_preparation_ru.ipynb` (HTML: `reports/A2_notebook_ru.html`), `reports/A2_report_ru.pdf` |
 | Мидтерм ✅ | `notebooks/03_baseline.ipynb`, `reports/midterm_slides.pptx` | `notebooks/03_baseline_ru.ipynb` (HTML: `reports/midterm_notebook_ru.html`), `reports/midterm_slides_ru.pptx`, шпаргалка к защите `reports/midterm_defense_notes_ru.md` |
-| A3 Обучение и дообучение ✅ | `notebooks/04_model_comparison_tuning.ipynb`, `05a_…`, `05b_…`, `06_llm_qlora.ipynb`, `07_results.ipynb`, `reports/A3_report.pdf` | `notebooks/*_ru.ipynb` для 04–07, `reports/A3_report_ru.pdf`; ресёрч и пилоты: `reports/A3_research_ru.md` |
+| A3 Обучение и дообучение ✅ | `notebooks/04_model_comparison_tuning.ipynb`, `05a_…`, `05b_…`, `06_llm_qlora.ipynb`, `07_results.ipynb`, `reports/A3_report.pdf` | `notebooks/*_ru.ipynb` для 04–07, `reports/A3_report_ru.pdf`, слайды `reports/A3_slides_ru.pptx` (+ PDF; собираются `reports/a3_slides/`), шпаргалка к защите `reports/A3_defense_notes_ru.md`; ресёрч и пилоты: `reports/A3_research_ru.md` |
+| A4 Практики на новых датасетах ✅ | `assignment4/P1_…`–`P6_…ipynb` | `assignment4/*_ru.ipynb`, сводка `assignment4/README_ru.md`; P6 выполнена на GPU Kaggle через `assignment4/kaggle_p6.py` |
 
 Также на русском: `reports/RESEARCH.md` (подробный разбор устройства проекта).
 

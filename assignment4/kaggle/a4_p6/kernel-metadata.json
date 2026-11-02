@@ -1,0 +1,14 @@
+{
+  "id": "azizabdulin/a4-p6-llm-lora",
+  "title": "a4-p6-llm-lora",
+  "code_file": "run_p6.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}

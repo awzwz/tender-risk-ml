@@ -1,0 +1,50 @@
+{
+ "num": [
+  "lead_time",
+  "log_lead_time",
+  "arrival_month",
+  "arrival_weekday",
+  "booking_month",
+  "arrival_date_week_number",
+  "stays_in_weekend_nights",
+  "stays_in_week_nights",
+  "total_nights",
+  "weekend_share",
+  "adults",
+  "children",
+  "babies",
+  "total_guests",
+  "adr",
+  "adr_per_guest",
+  "previous_cancellations",
+  "previous_bookings_not_canceled",
+  "repeat_history",
+  "days_in_waiting_list",
+  "total_of_special_requests"
+ ],
+ "bin": [
+  "is_repeated_guest",
+  "has_agent",
+  "has_company",
+  "has_kids"
+ ],
+ "cat": [
+  "hotel",
+  "meal",
+  "market_segment",
+  "distribution_channel",
+  "reserved_room_type",
+  "deposit_type",
+  "customer_type",
+  "country_top",
+  "agent_top"
+ ],
+ "target": "is_canceled",
+ "dropped_leaks": [
+  "reservation_status",
+  "reservation_status_date",
+  "assigned_room_type",
+  "booking_changes",
+  "required_car_parking_spaces"
+ ]
+}

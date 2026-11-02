@@ -30,3 +30,8 @@ experiments/**/*_log.txt
 results/a3_06/adapter/
 data/predictions/
 catboost_info/
+
+# Assignment 4: downloaded datasets and run logs
+assignment4/data/
+assignment4/logs/
+assignment4/catboost_info/

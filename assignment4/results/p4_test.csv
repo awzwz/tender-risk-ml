@@ -1,0 +1,4 @@
+,trained weights,test accuracy,95 % CI,macro-F1
+CNN from scratch,"1,174,947",0.8984375,"[0.844, 0.945]",0.8969548615142484
+ResNet-18 frozen + linear,"1,539",0.8984375,"[0.844, 0.945]",0.8994824016563148
+EfficientNet-B0 frozen + linear,"3,843",0.9140625,"[0.859, 0.961]",0.9145115220239246

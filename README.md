@@ -101,6 +101,7 @@ The script is resumable (checkpoints in `data/raw/_checkpoint.json`).
 | A1 Problem & Dataset ✅ | proposal (2–4 pages) + collected dataset | `reports/A1_proposal.docx` / `.pdf`, `src/collect.py` |
 | A2 Data Preparation & Baseline ✅ | notebook + brief report | `notebooks/02_data_preparation.ipynb` (HTML: `reports/A2_notebook.html`), `reports/A2_report.pdf` |
 | Midterm ✅ | working code, baseline model, ≥2 metrics, slides | `notebooks/03_baseline.ipynb` (HTML: `reports/midterm_notebook.html`), `reports/midterm_slides.pptx`, `reports/midterm_metrics.csv` |
-| A3 Training & Fine-Tuning ✅ | model comparison, tuning, transfer learning, fine-tuning, LLM + QLoRA, final model, report | `notebooks/04`–`07`, `kaggle/06_llm_qlora/`, `reports/A3_report.pdf`; research and pilots: `reports/A3_research_ru.md`, `experiments/a3_pilots/` |
+| A3 Training & Fine-Tuning ✅ | model comparison, tuning, transfer learning, fine-tuning, LLM + QLoRA, final model, report | `notebooks/04`–`07`, `kaggle/06_llm_qlora/`, `reports/A3_report.pdf`; defense slides (RU) `reports/A3_slides_ru.pptx` (built by `reports/a3_slides/`); research and pilots: `reports/A3_research_ru.md`, `experiments/a3_pilots/` |
+| A4 Practicals on new datasets ✅ | the course practicals repeated on new datasets: data preparation, baseline and metrics, model comparison and tuning, transfer learning, fine-tuning, LLM + LoRA | `assignment4/P1`–`P6` notebooks (hotel bookings, bean-leaf photos, financial tweets), summary in `assignment4/README.md`; P6 run on a Kaggle GPU via `assignment4/kaggle_p6.py` |
 
 Russian reading copies of every deliverable are listed in [README_ru.md](README_ru.md).

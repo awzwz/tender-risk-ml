@@ -1,0 +1,31 @@
+{
+ "test": {
+  "CNN from scratch": {
+   "accuracy": 0.8984375,
+   "macro_f1": 0.8969548615142484
+  },
+  "ResNet-18 frozen + linear": {
+   "accuracy": 0.8984375,
+   "macro_f1": 0.8994824016563148
+  },
+  "EfficientNet-B0 frozen + linear": {
+   "accuracy": 0.9140625,
+   "macro_f1": 0.9145115220239246
+  }
+ },
+ "data_efficiency": {
+  "CNN from scratch": {
+   "102": 0.7109375,
+   "258": 0.7109375,
+   "516": 0.7734375,
+   "1034": 0.8984375
+  },
+  "ResNet-18 frozen + linear": {
+   "102": 0.8046875,
+   "258": 0.828125,
+   "516": 0.8515625,
+   "1034": 0.8984375
+  }
+ },
+ "scratch_seconds": 198.2573709487915
+}

@@ -1,0 +1,30 @@
+{
+ "A. linear probe + aug": {
+  "accuracy": 0.765625,
+  "macro_f1": 0.767513919147906,
+  "trainable": 1539,
+  "minutes": 0.9412511467933655,
+  "best_val": 0.8345864661654135
+ },
+ "B. fine-tune layer4": {
+  "accuracy": 0.96875,
+  "macro_f1": 0.9689858069004164,
+  "trainable": 8395267,
+  "minutes": 1.2961976329485576,
+  "best_val": 0.9774436090225563
+ },
+ "C. full fine-tune": {
+  "accuracy": 0.9609375,
+  "macro_f1": 0.9612185777030184,
+  "trainable": 11178051,
+  "minutes": 2.917995353539785,
+  "best_val": 1.0
+ },
+ "D. full fine-tune, no aug": {
+  "accuracy": 0.953125,
+  "macro_f1": 0.9532147742818057,
+  "trainable": 11178051,
+  "minutes": 2.6314606149991353,
+  "best_val": 0.9924812030075187
+ }
+}
